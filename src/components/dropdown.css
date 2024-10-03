@@ -1,0 +1,146 @@
+.spotify-dropdown {
+  width: 15%;
+  padding-left: 20px;
+  font-size: 0.875rem; /* equivalent to text-sm */
+  border: 1px solid #3e3e3e; /* Similar to Spotify's border color */
+  background-color: #000; /* Spotify's dark background */
+  color: #fff; /* Spotify's text color */
+  padding: 8px;
+  position: relative; /* Added relative positioning */
+  transition: all 0.3s ease;
+}
+
+.spotify-dropdown .Dropdown-control {
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: inherit;
+}
+
+.spotify-dropdown .Dropdown-menu {
+  position: absolute;  /* Positioning the dropdown relative to parent */
+  left: 0;             /* Aligns the left edge */
+  background-color: #000;
+  border: 1px solid #3e3e3e;
+  margin-top: 4px;
+  padding-left: 10px;
+  width: 100%;         /* Ensure it takes up the full width of the parent */
+}
+
+.spotify-dropdown .Dropdown-option {
+  color: #fff;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.spotify-dropdown .Dropdown-option:hover {
+  background-color: #000;
+  border-bottom: 1px solid #0ff50f;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.spotify-dropdown .Dropdown-arrow {
+  border-color: #b3b3b3 transparent transparent;
+}
+
+@media (max-width: 640px) {
+  .spotify-dropdown {
+    width: 50%;
+  }
+}
+
+
+/*  */
+
+.volume-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #0ff50f;
+  border-radius: 5px;
+  outline: none;
+  transition: background 0.3s;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s, transform 0.3s;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  background: #fff;
+  transform: scale(1.1);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s, transform 0.3s;
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  background: #fff;
+  transform: scale(1.1);
+}
+
+.volume-slider:focus {
+  background: #0ff50f;
+}
+
+
+/*  */
+.custom-audio {
+  display: none;
+}
+
+.time-slider {
+  width: 400px;
+  -webkit-appearance: none;
+  height: 6px;
+  background: #fff;
+  border-radius: 5px;
+  outline: none;
+  transition: background 0.3s;
+}
+
+.time-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #0ff50f;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s, transform 0.3s;
+}
+
+.time-slider::-webkit-slider-thumb:hover {
+  background: #0ff50f;
+  transform: scale(1.1);
+}
+
+.time-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #0ff50f;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s, transform 0.3s;
+}
+
+.time-slider::-moz-range-thumb:hover {
+  background: #0ff50f;
+  transform: scale(1.1);
+}
