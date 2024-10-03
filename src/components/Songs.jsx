@@ -22,6 +22,8 @@ import "./dropdown.css";
 const Songs = () => {
   const navigate = useNavigate();
   const [query, setquery] = useState("");
+  const [currentTime, setCurrentTime] = useState(0);
+  const [totalTime, setTotalTime] = useState(0);
   const [requery, setrequery] = useState("");
   const [search, setsearch] = useState([]);
   var [index, setindex] = useState("");
@@ -75,6 +77,12 @@ const Songs = () => {
       setsearchclick(!searchclick);
     }
   }
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };
 
   function audioseter(i) {
     if (songlink[0]?.id === search[i].id) {
@@ -353,7 +361,7 @@ const Songs = () => {
   return (
     <motion.div className="w-full  min-h-screen overflow-hidden bg-black ">
       <Toaster position="top-center" reverseOrder={false} />
-      <motion.div className="search fixed  z-[99]  backdrop-blur-xl  gap-3 w-full sm:w-full sm:max-h-[5vh] max-h-[10vh] py-8 flex items-center justify-center ">
+      <motion.div className="search fixed  z-[99]  gap-3 w-full sm:w-full sm:max-h-[5vh] max-h-[10vh] py-8 flex items-center justify-center ">
         <i
           onClick={() => navigate(-1)}
           className="flex items-center justify-center w-12 h-12 border border-gray-300 bg-white rounded-full cursor-pointer text-3xl text-gray-700 ri-home-3-line hover:bg-gray-200 hover:text-green-500 transition"
@@ -518,6 +526,12 @@ const Songs = () => {
                   className="custom-audio w-full sm:w-[80%]"
                   autoPlay
                   onEnded={next}
+                  onTimeUpdate={() =>
+                    setCurrentTime(audioRef.current.currentTime)
+                  }
+                  onLoadedMetadata={() =>
+                    setTotalTime(audioRef.current.duration)
+                  }
                   src={e?.downloadUrl[4]?.url}
                 ></audio>
 
@@ -541,10 +555,17 @@ const Songs = () => {
                   <i className="ri-skip-right-fill"></i>
                 </button>
               </div>
-              <div>
+
+              <div className="flex justify-between items-center w-full sm:w-[80%]">
+                {/* Current Time */}
+                <span className="text-sm text-white">
+                  {formatTime(audioRef.current?.currentTime || 0)}
+                </span>
+
+                {/* Time Slider */}
                 <input
                   type="range"
-                  className="time-slider cursor-pointer"
+                  className="time-slider cursor-pointer w-full mx-2"
                   min="0"
                   max={audioRef.current?.duration || 100}
                   value={audioRef.current?.currentTime || 0}
@@ -572,8 +593,14 @@ const Songs = () => {
           #fff 0%)`,
                   }}
                 />
+
+                {/* Total Duration */}
+                <span className="text-sm text-white">
+                  {formatTime(audioRef.current?.duration || 0)}
+                </span>
               </div>
             </div>
+
             <motion.div className="flex items-center gap-4 sm:gap-2 justify-end">
               <i
                 onClick={() => likehandle(e)}

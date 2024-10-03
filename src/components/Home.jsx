@@ -24,6 +24,7 @@ import { useAnimate, stagger } from "framer-motion";
 import { Bounce, Expo, Power4, Sine } from "gsap/all";
 import { Circ } from "gsap/all";
 import toast, { Toaster } from "react-hot-toast";
+import { data } from "autoprefixer";
 
 const Home = () => {
   let navigate = useNavigate();
@@ -37,41 +38,26 @@ const Home = () => {
   var [page2, setpage2] = useState(Math.floor(Math.random() * 50));
   const audioRef = useRef();
   const [audiocheck, setaudiocheck] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [totalTime, setTotalTime] = useState(0);
 
   const options = [
-    // "hindi",
-    // "english",
-    // "punjabi",
-    // "tamil",
-    // "telugu",
-    // "marathi",
-    // "gujarati",
-    // "bengali",
-    // "kannada",
-    // "bhojpuri",
-    // "malayalam",
-    // "urdu",
-    "haryanvi",
-    // "rajasthani",
-    // "odia",
-    // "assamese",
-
     "hindi",
     "english",
     "punjabi",
-    // "tamil",
-    // "telugu",
-    // "marathi",
+    "tamil",
+    "telugu",
+    "marathi",
     "gujarati",
-    // "bengali",
-    // "kannada",
-    // "bhojpuri",
-    // "malayalam",
-    // "urdu",
-    // "haryanvi",
-    // "rajasthani",
-    // "odia",
-    // "assamese",
+    "bengali",
+    "kannada",
+    "bhojpuri",
+    "malayalam",
+    "urdu",
+    "haryanvi",
+    "rajasthani",
+    "odia",
+    "assamese",
   ];
 
   const Gethome = async () => {
@@ -93,6 +79,8 @@ const Home = () => {
         }&limit=20`
       );
 
+      // console.log(data);
+
       const newData = data.data.results.filter(
         (newItem) => !details.some((prevItem) => prevItem.id === newItem.id)
       );
@@ -103,6 +91,12 @@ const Home = () => {
     }
   };
   const [forceRender, setForceRender] = useState(false);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -188,16 +182,6 @@ const Home = () => {
       updatedData.push(i);
       localStorage.setItem("likeData", JSON.stringify(updatedData));
       setlike(true);
-
-      toast(`Song (${i?.name}) added to Likes section`, {
-        icon: "✅",
-        duration: 1500,
-        style: {
-          borderRadius: "10px",
-          background: "rgb(115 115 115)",
-          color: "#fff",
-        },
-      });
     } else {
       setlike(false);
       let existingData = localStorage.getItem("likeData");
@@ -215,18 +199,6 @@ const Home = () => {
         updatedData.splice(indexToRemove, 1);
 
         localStorage.setItem("likeData", JSON.stringify(updatedData));
-
-        toast(`Song (${i?.name}) removed successfully.`, {
-          icon: "⚠️",
-          duration: 1500,
-          style: {
-            borderRadius: "10px",
-            background: "rgb(115 115 115)",
-            color: "#fff",
-          },
-        });
-      } else {
-        toast.error("Song not found in localStorage.");
       }
     }
   }
@@ -407,16 +379,24 @@ const Home = () => {
           </Link>
         </motion.div>
       </motion.div>
-      <div className="w-full  bg-black  min-h-[63vh] pt-[20vh] pb-[30vh]  text-white p-5 flex flex-col gap-5 overflow-auto ">
-        <div className="w-full   flex justify-end ">
-          <Dropdown
-            className="w-[15%] text-sm sm:w-[50%] spotify-dropdown capitalize"
-            options={options}
-            onChange={(e) => setlanguage(e.value)}
-            placeholder={language ? ` ${language}  ` : "Select language"}
-          />
-        </div>
 
+      <div className="w-full bg-black pt-[30vh] text-white flex flex-col gap-5 overflow-x-auto overflow-hidden no-scrollbar">
+      <div className="flex items-center gap-4">
+          {options.map((langOption, index) => (
+            <button
+              key={index}
+              className={`text-xl sm:text-sm ml-3 sm:ml-0 sm:font-bold rounded-[0.15rem] px-4 hover:text-[#0fea0f] capitalize bg-[#131212] p-3 ${
+                language === langOption ? "text-[#0ff50f]" : "text-white"
+              }`}
+              onClick={() => setlanguage(langOption)}
+            >
+              {langOption}
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      <div className="w-full  bg-black  min-h-[63vh] pb-[30vh]  text-white p-5 flex flex-col gap-5 overflow-auto ">
         <div className="trending songs flex flex-col gap-3 w-full ">
           <h3 className="text-4xl h-[5vh] font-bold text-[#0ff50f] capitalize ">
             {language} <span className="text-white">Songs</span>
@@ -645,7 +625,6 @@ const Home = () => {
                 </h3>
               </div>
             </motion.div>
-
             <div className="flex items-center gap-2 sm:gap-1 w-[50%] flex-col">
               <div className="flex justify-between">
                 <button
@@ -662,6 +641,12 @@ const Home = () => {
                   className="custom-audio w-full sm:w-[80%]"
                   autoPlay
                   onEnded={next}
+                  onTimeUpdate={() =>
+                    setCurrentTime(audioRef.current.currentTime)
+                  }
+                  onLoadedMetadata={() =>
+                    setTotalTime(audioRef.current.duration)
+                  }
                   src={e?.downloadUrl[4]?.url}
                 ></audio>
 
@@ -685,10 +670,17 @@ const Home = () => {
                   <i className="ri-skip-right-fill"></i>
                 </button>
               </div>
-              <div>
+
+              <div className="flex justify-between items-center w-full sm:w-[80%]">
+                {/* Current Time */}
+                <span className="text-sm text-white">
+                  {formatTime(audioRef.current?.currentTime || 0)}
+                </span>
+
+                {/* Time Slider */}
                 <input
                   type="range"
-                  className="time-slider cursor-pointer"
+                  className="time-slider cursor-pointer w-full mx-2"
                   min="0"
                   max={audioRef.current?.duration || 100}
                   value={audioRef.current?.currentTime || 0}
@@ -716,8 +708,14 @@ const Home = () => {
           #fff 0%)`,
                   }}
                 />
+
+                {/* Total Duration */}
+                <span className="text-sm text-white">
+                  {formatTime(audioRef.current?.duration || 0)}
+                </span>
               </div>
             </div>
+
             <motion.div className="flex items-center gap-4 sm:gap-2 justify-end">
               <i
                 onClick={() => likehandle(e)}

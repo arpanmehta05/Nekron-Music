@@ -39,6 +39,8 @@ const PlaylistDetails = () => {
   const image = playlistDetails?.image || null; // If no image, set null as fallback
   const playlistName = playlistDetails?.name || "Unknown Playlist";
   // settitle(songlink.name);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [totalTime, setTotalTime] = useState(0);
 
   const Getdetails = async () => {
     try {
@@ -69,6 +71,11 @@ const PlaylistDetails = () => {
       setsonglink([details[i]]);
     }
   }
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };
 
   const handleVolumeChange = (e) => {
     const value = e.target.value;
@@ -425,78 +432,92 @@ const PlaylistDetails = () => {
               </div>
             </motion.div>
             <div className="flex items-center gap-2 sm:gap-1 w-[50%] flex-col">
-              <div className="flex justify-between">
-                <button
-                  onClick={pre}
-                  className="text-3xl text-zinc-300 hover:text-zinc-50 cursor-pointer"
-                >
-                  <i className="ri-skip-back-mini-fill"></i>
-                </button>
+  <div className="flex justify-between">
+    <button
+      onClick={pre}
+      className="text-3xl text-zinc-300 hover:text-zinc-50 cursor-pointer"
+    >
+      <i className="ri-skip-back-mini-fill"></i>
+    </button>
 
-                <audio
-                  ref={audioRef}
-                  onPause={() => setaudiocheck(false)}
-                  onPlay={() => setaudiocheck(true)}
-                  className="custom-audio w-full sm:w-[80%]"
-                  autoPlay
-                  onEnded={next}
-                  src={e?.downloadUrl[4]?.url}
-                ></audio>
+    <audio
+      ref={audioRef}
+      onPause={() => setaudiocheck(false)}
+      onPlay={() => setaudiocheck(true)}
+      className="custom-audio w-full sm:w-[80%]"
+      autoPlay
+      onEnded={next}
+      onTimeUpdate={() => setCurrentTime(audioRef.current.currentTime)}
+      onLoadedMetadata={() => setTotalTime(audioRef.current.duration)}
+      src={e?.downloadUrl[4]?.url}
+    ></audio>
 
-                <button
-                  onClick={() => {
-                    if (audioRef.current.paused) {
-                      audioRef.current.play();
-                    } else {
-                      audioRef.current.pause();
-                    }
-                  }}
-                  className={`text-white text-5xl ${
-                    audiocheck ? "ri-pause-circle-fill" : "ri-play-circle-fill"
-                  }`}
-                ></button>
+    <button
+      onClick={() => {
+        if (audioRef.current.paused) {
+          audioRef.current.play();
+        } else {
+          audioRef.current.pause();
+        }
+      }}
+      className={`text-white text-5xl ${
+        audiocheck ? "ri-pause-circle-fill" : "ri-play-circle-fill"
+      }`}
+    ></button>
 
-                <button
-                  onClick={next}
-                  className="text-3xl text-zinc-300 hover:text-zinc-50 cursor-pointer"
-                >
-                  <i className="ri-skip-right-fill"></i>
-                </button>
-              </div>
-              <div>
-                <input
-                  type="range"
-                  className="time-slider cursor-pointer"
-                  min="0"
-                  max={audioRef.current?.duration || 100}
-                  value={audioRef.current?.currentTime || 0}
-                  onInput={(e) => {
-                    const newTime = e.target.value;
-                    if (audioRef.current) {
-                      e.target.style.background = `linear-gradient(
-                  to right,
-                  #0ff50f ${(newTime / audioRef.current.duration) * 100}%,
-                  #fff ${(newTime / audioRef.current.duration) * 100}%)`;
-                    }
-                  }}
-                  onChange={(e) => {
-                    if (audioRef.current) {
-                      const newTime = e.target.value;
-                      audioRef.current.currentTime = newTime;
-                    }
-                  }}
-                  style={{
-                    background: `linear-gradient(
-                to right,
-                #0ff50f ${
-                  (audioRef.current?.currentTime / audioRef.current?.duration) *
-                  100
-                }%,
-                #fff 0%)`,
-                  }}
-                />
-              </div>
-            </div>
+    <button
+      onClick={next}
+      className="text-3xl text-zinc-300 hover:text-zinc-50 cursor-pointer"
+    >
+      <i className="ri-skip-right-fill"></i>
+    </button>
+  </div>
+
+  <div className="flex justify-between items-center w-full sm:w-[80%]">
+    {/* Current Time */}
+    <span className="text-sm text-white">
+      {formatTime(audioRef.current?.currentTime || 0)}
+    </span>
+
+    {/* Time Slider */}
+    <input
+      type="range"
+      className="time-slider cursor-pointer w-full mx-2"
+      min="0"
+      max={audioRef.current?.duration || 100}
+      value={audioRef.current?.currentTime || 0}
+      onInput={(e) => {
+        const newTime = e.target.value;
+        if (audioRef.current) {
+          e.target.style.background = `linear-gradient(
+            to right,
+            #0ff50f ${(newTime / audioRef.current.duration) * 100}%,
+            #fff ${(newTime / audioRef.current.duration) * 100}%)`;
+        }
+      }}
+      onChange={(e) => {
+        if (audioRef.current) {
+          const newTime = e.target.value;
+          audioRef.current.currentTime = newTime;
+        }
+      }}
+      style={{
+        background: `linear-gradient(
+          to right,
+          #0ff50f ${
+            (audioRef.current?.currentTime / audioRef.current?.duration) * 100
+          }%,
+          #fff 0%)`,
+      }}
+    />
+
+    {/* Total Duration */}
+    <span className="text-sm text-white">
+      {formatTime(audioRef.current?.duration || 0)}
+    </span>
+  </div>
+</div>
+
 
             <motion.div className="flex items-center gap-4 sm:gap-2 justify-end">
               <i

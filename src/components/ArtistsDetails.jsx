@@ -37,6 +37,8 @@ const ArtistsDetails = () => {
   const audioRef = useRef();
   const [hasMore, sethasMore] = useState(true);
   const [audiocheck, setaudiocheck] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [totalTime, setTotalTime] = useState(0);
 
   const Getdetails = async () => {
     try {
@@ -74,6 +76,12 @@ const ArtistsDetails = () => {
       setsonglink([details[i]]);
     }
   }
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };
 
   function likeset(e) {
     var tf =
@@ -464,7 +472,6 @@ const ArtistsDetails = () => {
                 </h3>
               </div>
             </motion.div>
-
             <div className="flex items-center gap-2 sm:gap-1 w-[50%] flex-col">
               <div className="flex justify-between">
                 <button
@@ -481,6 +488,12 @@ const ArtistsDetails = () => {
                   className="custom-audio w-full sm:w-[80%]"
                   autoPlay
                   onEnded={next}
+                  onTimeUpdate={() =>
+                    setCurrentTime(audioRef.current.currentTime)
+                  }
+                  onLoadedMetadata={() =>
+                    setTotalTime(audioRef.current.duration)
+                  }
                   src={e?.downloadUrl[4]?.url}
                 ></audio>
 
@@ -504,10 +517,17 @@ const ArtistsDetails = () => {
                   <i className="ri-skip-right-fill"></i>
                 </button>
               </div>
-              <div>
+
+              <div className="flex justify-between items-center w-full sm:w-[80%]">
+                {/* Current Time */}
+                <span className="text-sm text-white">
+                  {formatTime(audioRef.current?.currentTime || 0)}
+                </span>
+
+                {/* Time Slider */}
                 <input
                   type="range"
-                  className="time-slider cursor-pointer"
+                  className="time-slider cursor-pointer w-full mx-2"
                   min="0"
                   max={audioRef.current?.duration || 100}
                   value={audioRef.current?.currentTime || 0}
@@ -515,9 +535,9 @@ const ArtistsDetails = () => {
                     const newTime = e.target.value;
                     if (audioRef.current) {
                       e.target.style.background = `linear-gradient(
-                  to right,
-                  #0ff50f ${(newTime / audioRef.current.duration) * 100}%,
-                  #fff ${(newTime / audioRef.current.duration) * 100}%)`;
+            to right,
+            #0ff50f ${(newTime / audioRef.current.duration) * 100}%,
+            #fff ${(newTime / audioRef.current.duration) * 100}%)`;
                     }
                   }}
                   onChange={(e) => {
@@ -528,16 +548,21 @@ const ArtistsDetails = () => {
                   }}
                   style={{
                     background: `linear-gradient(
-                to right,
-                #0ff50f ${
-                  (audioRef.current?.currentTime / audioRef.current?.duration) *
-                  100
-                }%,
-                #fff 0%)`,
+          to right,
+          #0ff50f ${
+            (audioRef.current?.currentTime / audioRef.current?.duration) * 100
+          }%,
+          #fff 0%)`,
                   }}
                 />
+
+                {/* Total Duration */}
+                <span className="text-sm text-white">
+                  {formatTime(audioRef.current?.duration || 0)}
+                </span>
               </div>
             </div>
+
             <motion.div className="flex items-center gap-4 sm:gap-2 justify-end">
               <i
                 onClick={() => likehandle(e)}

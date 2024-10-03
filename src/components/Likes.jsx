@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Loading from "./Loading";
-import image from "../../public/liked.png"
+import image from "../../public/liked.png";
 import {
   animate,
   circIn,
@@ -35,6 +35,8 @@ function Likes() {
   const [download, setdownload] = useState(false);
   const audioRef = useRef();
   const [audiocheck, setaudiocheck] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [totalTime, setTotalTime] = useState(0);
 
   function audioseter(i) {
     if (songlink[0]?.id === details[i].id) {
@@ -54,55 +56,12 @@ function Likes() {
     }
   }
 
-  const downloadSongsfile = () => {
-    if (details.length > 0) {
-      const password =
-        prompt(`Create A Password For Your File Protection 🔑 , Note : This Password Is Required At The Time Of Import Songs
-      Please Enter Your Password 👇:`);
-      if (!password) return;
-
-      const json = JSON.stringify(details);
-
-      const encryptedData = CryptoJS.AES.encrypt(json, password).toString();
-
-      const blob = new Blob([encryptedData], { type: "text/plain" });
-
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${details.length} songs.json`;
-      document.body.appendChild(a);
-
-      a.click();
-
-      document.body.removeChild(a);
-
-      URL.revokeObjectURL(url);
-    }
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
-
-  function likehandle(i) {
-    let existingData = localStorage.getItem("likeData");
-
-    let updatedData = [];
-
-    if (existingData) {
-      updatedData = JSON.parse(existingData);
-    }
-
-    let exists = updatedData.some((item) => item.id === i.id);
-
-    if (!exists) {
-      updatedData.push(i);
-
-      localStorage.setItem("likeData", JSON.stringify(updatedData));
-      setlike(true);
-    } else {
-      setlike(true);
-    }
-  }
-
+  
   function removehandle(i, ind) {
     setlike(false);
     let existingData = localStorage.getItem("likeData");
@@ -287,55 +246,6 @@ function Likes() {
       initializeMediaSession();
     }
   }, [songlink]);
-
-  const downloadSongs = () => {
-    if (songs.length > 0) {
-      return toast.promise(
-        new Promise(async (resolve, reject) => {
-          try {
-            const zip = new JSZip();
-            const promises = [];
-
-            songs.forEach((song) => {
-              const { title, url } = song;
-              const promise = fetch(url)
-                .then((response) => response.blob())
-                .then((blob) => {
-                  zip.file(`${title} (320kbps).mp3`, blob, { binary: true });
-                })
-                .catch((error) => {
-                  toast.error(`Error downloading ${title}: ${error}`);
-                });
-              promises.push(promise);
-            });
-
-            await Promise.all(promises);
-
-            const content = await zip.generateAsync({ type: "blob" });
-            const zipUrl = window.URL.createObjectURL(content);
-            const link = document.createElement("a");
-            link.href = zipUrl;
-            link.download = "songs.zip";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            resolve();
-          } catch (error) {
-            reject("Error downloading songs");
-          }
-        }),
-        {
-          loading: `Downloading songs`, // Loading message
-          success: "Download songs completed successfully ✅", // Success message
-          error: "Error downloading songs", // Error message
-        }
-      );
-    } else {
-      return toast.error("No songs available to download");
-    }
-  };
-
   var title = songlink[0]?.name;
   document.title = `${title ? title : "THE ULTIMATE SONGS"}`;
 
@@ -350,22 +260,21 @@ function Likes() {
       </div>
 
       {details.length > 0 ? (
-      <div className="flex items-center justify-center py-20">
+        <div className="flex items-center justify-center py-20">
           <img
             src={image}
             alt="Liked songs"
             className="w-[300px] h-[300px] object-cover rounded-md"
           />
-      </div>) : (
+        </div>
+      ) : (
         <div></div>
       )}
 
       {details.length > 0 ? (
         <div className="flex flex-col w-full pb-10 px-4 bg-[#131212] text-white min-h-[65vh]">
           <div className="playlist-header flex justify-between pb-4 mb-6">
-            <h2 className="text-3xl font-bold text-[#0ff50f]">
-              Liked Songs
-            </h2>
+            <h2 className="text-3xl font-bold text-[#0ff50f]">Liked Songs</h2>
           </div>
           {details?.map((d, i) => (
             <div
@@ -425,8 +334,7 @@ function Likes() {
                     removehandle(d.id, i);
                   }}
                   className="text-2xl text-[#0ff50f] cursor-pointer ri-heart-fill"
-                >
-                </i>
+                ></i>
               </div>
             </div>
           ))}
@@ -483,6 +391,7 @@ function Likes() {
                   </h3>
                 </div>
               </motion.div>
+
               <div className="flex items-center gap-2 sm:gap-1 w-[50%] flex-col">
                 <div className="flex justify-between">
                   <button
@@ -499,6 +408,12 @@ function Likes() {
                     className="custom-audio w-full sm:w-[80%]"
                     autoPlay
                     onEnded={next}
+                    onTimeUpdate={() =>
+                      setCurrentTime(audioRef.current.currentTime)
+                    }
+                    onLoadedMetadata={() =>
+                      setTotalTime(audioRef.current.duration)
+                    }
                     src={e?.downloadUrl[4]?.url}
                   ></audio>
 
@@ -524,10 +439,17 @@ function Likes() {
                     <i className="ri-skip-right-fill"></i>
                   </button>
                 </div>
-                <div>
+
+                <div className="flex justify-between items-center w-full sm:w-[80%]">
+                  {/* Current Time */}
+                  <span className="text-sm text-white">
+                    {formatTime(audioRef.current?.currentTime || 0)}
+                  </span>
+
+                  {/* Time Slider */}
                   <input
                     type="range"
-                    className="time-slider cursor-pointer"
+                    className="time-slider cursor-pointer w-full mx-2"
                     min="0"
                     max={audioRef.current?.duration || 100}
                     value={audioRef.current?.currentTime || 0}
@@ -535,9 +457,9 @@ function Likes() {
                       const newTime = e.target.value;
                       if (audioRef.current) {
                         e.target.style.background = `linear-gradient(
-                  to right,
-                  #0ff50f ${(newTime / audioRef.current.duration) * 100}%,
-                  #fff ${(newTime / audioRef.current.duration) * 100}%)`;
+            to right,
+            #0ff50f ${(newTime / audioRef.current.duration) * 100}%,
+            #fff ${(newTime / audioRef.current.duration) * 100}%)`;
                       }
                     }}
                     onChange={(e) => {
@@ -548,14 +470,18 @@ function Likes() {
                     }}
                     style={{
                       background: `linear-gradient(
-                to right,
-                #0ff50f ${
-                  (audioRef.current?.currentTime / audioRef.current?.duration) *
-                  100
-                }%,
-                #fff 0%)`,
+          to right,
+          #0ff50f ${
+            (audioRef.current?.currentTime / audioRef.current?.duration) * 100
+          }%,
+          #fff 0%)`,
                     }}
                   />
+
+                  {/* Total Duration */}
+                  <span className="text-sm text-white">
+                    {formatTime(audioRef.current?.duration || 0)}
+                  </span>
                 </div>
               </div>
 
