@@ -19,6 +19,7 @@ import { Circ } from "gsap/all";
 import toast, { Toaster } from "react-hot-toast";
 import JSZip from "jszip";
 import CryptoJS from "crypto-js";
+import { duration } from "@mui/material";
 
 function Likes() {
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ function Likes() {
     const secs = Math.floor(seconds % 60);
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
-  
+
   function removehandle(i, ind) {
     setlike(false);
     let existingData = localStorage.getItem("likeData");
@@ -247,7 +248,7 @@ function Likes() {
     }
   }, [songlink]);
   var title = songlink[0]?.name;
-  document.title = `${title ? title : "THE ULTIMATE SONGS"}`;
+  document.title = `${title ? title : "Nekron-Music"}`;
 
   return (
     <div className="w-full h-screen bg-[#131212]">
@@ -260,12 +261,13 @@ function Likes() {
       </div>
 
       {details.length > 0 ? (
-        <div className="flex items-center justify-center py-20">
+        <div className="flex items-center justify-evenly py-20">
           <img
             src={image}
             alt="Liked songs"
             className="w-[300px] h-[300px] object-cover rounded-md"
           />
+          <h2 className="text-7xl font-bold text-[#0ff50f]">Liked Songs</h2>
         </div>
       ) : (
         <div></div>
@@ -273,18 +275,40 @@ function Likes() {
 
       {details.length > 0 ? (
         <div className="flex flex-col w-full pb-10 px-4 bg-[#131212] text-white min-h-[65vh]">
-          <div className="playlist-header flex justify-between pb-4 mb-6">
-            <h2 className="text-3xl font-bold text-[#0ff50f]">Liked Songs</h2>
+          <div className="border-b-[1px] border-gray-400 text-white flex items-center justify-between p-4 transition duration-300">
+            <div className="flex items-center justify-center w-[5%]">
+              <p className="text-2xl font-bold">#</p>
+            </div>
+            <div className="flex items-center justify-start w-[30%]">
+              <p className="text-2xl font-bold">Title</p>
+            </div>
+            <div className="flex items-center justify-start w-[25%]">
+              <p className="text-2xl font-bold">Album</p>
+            </div>
+            <div className="flex items-center justify-center w-[30%]">
+              <p className="text-3xl font-medium">
+                <i className="ri-time-line"></i>
+              </p>
+            </div>
           </div>
           {details?.map((d, i) => (
             <div
               title="click on song image or name to play the song"
               key={i}
               className="flex items-center justify-between p-4 mb-4 hover:bg-gray-800 transition duration-300 rounded-md cursor-pointer"
+              onClick={() => audioseter(i)}
             >
+              <div className="flex items-center justify-center w-[5%]">
+                <p
+                  className={`text-base font-semibold ${
+                    d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
+                  }`}
+                >
+                  {i + 1}
+                </p>
+              </div>
               <div
-                onClick={() => audioseter(i)}
-                className="flex items-center w-full gap-4"
+                className="flex items-center gap-4 w-[30%] pl-7"
               >
                 <motion.img
                   viewport={{ once: true }}
@@ -300,11 +324,28 @@ function Likes() {
                   >
                     {d.name}
                   </h3>
-                  <h4 className="text-sm text-gray-400">{d.album.name}</h4>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center w-[25%] pl-[58px]">
+                <p
+                  className={`text-base font-bold ${
+                    d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
+                  }`}
+                >
+                  {d.album.name}
+                </p>
+              </div>
+
+              <div className="flex items-center w-[30%] pl-[20%]">
+                <p className={`text-base font-bold ${
+                    d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
+                  }`}>
+                  {formatTime(d.duration)}
+                  </p>
+              </div>
+
+              <div className="flex items-center justify-center gap-4">
                 {d.id === songlink[0]?.id ? (
                   <i
                     className={`${

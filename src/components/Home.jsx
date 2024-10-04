@@ -79,7 +79,7 @@ const Home = () => {
         }&limit=20`
       );
 
-      // console.log(data);
+      console.log(data);
 
       const newData = data.data.results.filter(
         (newItem) => !details.some((prevItem) => prevItem.id === newItem.id)
