@@ -390,7 +390,6 @@ const Songs = () => {
           page > 2 && <h1 className="bg-[#121111] text-white">Loading...</h1>
         }
         endMessage={<p className="bg-[#121111] text-white">No more items</p>}
-        // endMessage={()=>nomoredata()}
       >
         <div className="pt-[10vh] pb-[30vh] overflow-hidden overflow-y-auto">
           <div className="flex w-full bg-black text-white p-10 sm:p-3 sm:gap-3 sm:block flex-wrap gap-10 justify-center">
@@ -398,29 +397,27 @@ const Songs = () => {
               <motion.div
                 title="Click on song image or name to play the song"
                 key={i}
-                className="items-center justify-center relative w-[40%] flex mb-3 sm:mb-3 sm:w-full sm:flex sm:items-center sm:gap-3 rounded-md h-[10vw] sm:h-[15vh] cursor-pointer bg-[#121111] hover:bg-[#333] duration-300"
-                whileHover={{ scale: 1.05 }} // Hover scaling effect added
-                transition={{ duration: 0.3 }} // Smooth hover transition
+                className="flex-shrink-0 h-[50%] w-[20%] sm:w-[40%] rounded-lg cursor-pointer flex flex-col transition-all duration-300 shadow-md group relative mb-3"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+                onClick={() => audioseter(i)}
               >
-                <div
-                  onClick={() => audioseter(i)}
-                  className="flex w-[80%] items-center"
-                >
+                <motion.div className="w-full h-[75%] rounded-md overflow-hidden flex items-center justify-center mb-4">
                   <motion.img
                     viewport={{ once: true }}
-                    className="w-[10vw] h-[10vw] sm:h-[15vh] sm:w-[15vh] rounded-md"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     src={d.image[2].url}
                     alt=""
                   />
                   <img
                     className={`absolute top-0 w-[8%] sm:w-[10%] rounded-md ${
                       d.id === songlink[0]?.id ? "block" : "hidden"
-                    } `}
+                    }`}
                     alt=""
                   />
                   {songlink.length > 0 && (
                     <i
-                      className={`text-white absolute top-0 sm:h-[15vh] w-[10vw] h-full flex items-center justify-center text-5xl sm:w-[15vh] opacity-90 duration-300 rounded-md ${
+                      className={`absolute top-[30%] left-[40%] opacity-75 text-6xl text-[#0ff50f] ${
                         d.id === songlink[0]?.id ? "block" : "hidden"
                       } ${
                         audiocheck
@@ -429,35 +426,53 @@ const Songs = () => {
                       }`}
                     ></i>
                   )}
-                  <div className="ml-3 sm:ml-3 flex justify-center items-center gap-5 mt-2">
-                    <div className="flex flex-col">
-                      <p
-                        className={`text-xl sm:text-xs leading-none font-bold ${
-                          d.id === songlink[0]?.id && "text-[#0ff50f]"
-                        }`}
-                      >
-                        {d.name}
-                      </p>
-                      <p className="text-sm sm:text-[2.5vw] pt-2 text-white">
-                        {d.album.name}
-                      </p>
-                    </div>
+                </motion.div>
+                <motion.div className="flex justify-between items-center w-full">
+                  <div className="flex flex-col w-[75%]">
+                    <p
+                      className={`text-white text-xl sm:text-md font-bold leading-tight transition duration-300 ${
+                        d.id === songlink[0]?.id ? "text-[#0ff50f]" : ""
+                      }`}
+                    >
+                      {d.name.length > 20
+                        ? d.name
+                            .slice(0, 20)
+                            .trim()
+                            .replace(/[\s\(\[\{]*$/, "") + "..."
+                        : d.name}
+                    </p>
+                    <p className="text-gray-400 text-sm sm:text-xs mt-1">
+                      {d.album.name.length > 20
+                        ? d.album.name
+                            .slice(0, 20)
+                            .trim()
+                            .replace(/[\s\(\[\{]*$/, "") + "..."
+                        : d.album.name}
+                    </p>
                   </div>
-                </div>
 
-                {existingData?.find((element) => element?.id == d?.id) ? (
-                  <i
-                    title="Unlike"
-                    onClick={() => likehandle2(d)}
-                    className={`text-2xl m-auto flex w-[3vw] sm:w-[9vw] rounded-full justify-center items-center h-[3vw] sm:h-[9vw] duration-300 cursor-pointer text-[#0ff50f] ri-heart-3-fill`}
-                  ></i>
-                ) : (
-                  <i
-                    title="Like"
-                    onClick={() => likehandle2(d)}
-                    className={`text-2xl m-auto flex w-[3vw] sm:w-[9vw] rounded-full justify-center items-center h-[3vw] sm:h-[9vw] duration-300 cursor-pointer text-white ri-heart-3-fill`}
-                  ></i>
-                )}
+                  <div className="flex flex-row-reverse">
+                  {existingData?.find((element) => element?.id == d?.id) ? (
+                    <i
+                      title="Unlike"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        likehandle2(d);
+                      }}
+                      className={`text-2xl m-auto flex w-[3vw] sm:w-[9vw] rounded-full justify-center items-center h-[3vw] sm:h-[9vw] duration-300 cursor-pointer text-[#0ff50f] ri-heart-3-fill`}
+                    ></i>
+                  ) : (
+                    <i
+                      title="Like"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        likehandle2(d);
+                      }}
+                      className={`text-2xl m-auto flex w-[3vw] sm:w-[9vw] rounded-full justify-center items-center h-[3vw] sm:h-[9vw] duration-300 cursor-pointer text-white ri-heart-3-fill`}
+                    ></i>
+                  )}
+                  </div>
+                </motion.div>
               </motion.div>
             ))}
             {search.length > 0 && !hasMore && (

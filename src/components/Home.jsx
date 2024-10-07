@@ -407,12 +407,11 @@ const Home = () => {
                 onClick={() => audioseter(i)}
                 key={i}
                 whileHover={{
-                  scale: 1.1,
-                  boxShadow: "0 10px 15px rgba(0, 255, 15, 0.2)",
+                  scale: 1.1
                 }}
-                className="flex-shrink-0 w-[20%] sm:w-[40%] p-5 bg-[#1e1e1e] rounded-lg cursor-pointer flex flex-col items-center justify-center hover:bg-[#2c2c2c] transition-all duration-300 shadow-md group relative"
+                className="flex-shrink-0 h-[50%] w-[20%] sm:w-[40%] rounded-lg cursor-pointer flex flex-col transition-all duration-300 shadow-md group relative"
               >
-                <motion.div className="w-[12vw] sm:w-[25vw] h-[12vw] sm:h-[25vw] rounded-md overflow-hidden flex items-center justify-center mb-4">
+                <motion.div className="w-full sm:w-full h-[75%] sm:h-[75%] rounded-md overflow-hidden flex items-center justify-center mb-4">
                   <motion.img
                     src={t.image[2].url}
                     alt={t.name}
@@ -420,7 +419,7 @@ const Home = () => {
                   />
                 </motion.div>
 
-                <motion.div className="flex flex-col items-center text-center">
+                <motion.div className="flex flex-col">
                   <p
                     className={`text-white text-xl sm:text-md font-bold ${
                       i === index && "text-[#0ff50f]"
@@ -441,11 +440,12 @@ const Home = () => {
                           .replace(/[\s\(\[\{]*$/, "") + "..."
                       : t.album.name}
                   </p>
+                  
                 </motion.div>
 
                 {songlink.length > 0 && (
                   <i
-                    className={`absolute top-2 right-2 text-4xl text-[#0ff50f] ${
+                    className={`absolute top-[30%] left-[40%] opacity-75 text-6xl text-[#0ff50f] ${
                       t.id === songlink[0]?.id ? "block" : "hidden"
                     } ${
                       audiocheck
@@ -475,12 +475,11 @@ const Home = () => {
                 }
                 key={i}
                 whileHover={{
-                  scale: 1.1,
-                  boxShadow: "0 10px 15px rgba(0, 255, 15, 0.2)",
+                  scale: 1.1
                 }}
-                className="flex-shrink-0 w-[15%] sm:w-[40%] p-5 bg-[#1e1e1e] rounded-lg cursor-pointer flex flex-col items-center justify-center hover:bg-[#2c2c2c] transition-all duration-300 shadow-md group"
+                className="flex-shrink-0 w-[15%] sm:w-[40%] h-[50%] rounded-lg cursor-pointer flex flex-col items-center justify-center transition-all duration-300 shadow-md group"
               >
-                <motion.div className="w-[8vw] sm:w-[20vw] h-[8vw] sm:h-[20vw] rounded-md overflow-hidden flex items-center justify-center mb-4">
+                <motion.div className="w-[100%] sm:w-[100%] h-[75%] sm:h-[75%] rounded-md overflow-hidden flex items-center justify-center mb-4">
                   <motion.img
                     src={c.image[2].link}
                     alt=""
@@ -518,22 +517,18 @@ const Home = () => {
                 }
                 key={i}
                 whileHover={{
-                  scale: 1.1,
-                  boxShadow: "0 10px 15px rgba(0, 255, 15, 0.2)",
+                  scale: 1.1
                 }}
-                className="flex-shrink-0 w-[15%] sm:w-[40%] p-5 bg-[#1e1e1e] rounded-lg cursor-pointer flex flex-col items-center justify-center hover:bg-[#2c2c2c] transition-all duration-300 shadow-md group"
+                className="flex-shrink-0 h-[50%] w-[15%] sm:w-[40%] rounded-lg cursor-pointer flex flex-col items-center justify-center transition-all duration-300 shadow-md group"
               >
-                {/* Square Playlist Cover Image with Rounded Corners */}
-                <motion.div className="w-[8vw] sm:w-[20vw] h-[8vw] sm:h-[20vw] rounded-md overflow-hidden flex items-center justify-center mb-4">
+                <motion.div className="w-[100%] sm:w-[100%] h-[75%] sm:h-[75%] rounded-md overflow-hidden flex items-center justify-center mb-4">
                   <motion.img
                     src={p.image[2].link}
                     alt=""
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </motion.div>
-
-                {/* Playlist Title */}
-                <motion.h3 className="leading-none">
+                <motion.h3 className="leading-none h-[25%]">
                   <p className="text-white text-xl sm:text-md font-bold">
                     {p.title.length > 15
                       ? p.title
