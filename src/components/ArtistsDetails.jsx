@@ -1,22 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 import InfiniteScroll from "react-infinite-scroll-component";
-import wavs from "../../public/wavs.gif";
 import {
-  animate,
-  circIn,
-  circInOut,
-  circOut,
-  easeIn,
-  easeInOut,
-  easeOut,
   motion,
 } from "framer-motion";
-import { useAnimate, stagger } from "framer-motion";
-import { Bounce, Expo, Power4, Sine } from "gsap/all";
-import { Circ } from "gsap/all";
 import toast, { Toaster } from "react-hot-toast";
 
 const ArtistsDetails = () => {

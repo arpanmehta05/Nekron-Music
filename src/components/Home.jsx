@@ -1,30 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, Navigate, json, useNavigate } from "react-router-dom";
-import logo from "./../../public/logo3.jpg";
+import { Link, useNavigate } from "react-router-dom";
 import mainlogo from "./../../public/logo.jpg";
 import axios from "axios";
 import Loading from "./Loading";
-import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
-import wavs from "../../public/wavs.gif";
-import wait from "../../public/wait.gif";
 import "./dropdown.css";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 import {
-  animate,
-  circIn,
-  circInOut,
-  circOut,
-  easeIn,
-  easeInOut,
-  easeOut,
   motion,
 } from "framer-motion";
-import { useAnimate, stagger } from "framer-motion";
-import { Bounce, Expo, Power4, Sine } from "gsap/all";
-import { Circ } from "gsap/all";
-import toast, { Toaster } from "react-hot-toast";
-import { data } from "autoprefixer";
 
 const Home = () => {
   let navigate = useNavigate();
