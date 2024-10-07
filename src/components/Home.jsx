@@ -79,7 +79,7 @@ const Home = () => {
         }&limit=20`
       );
 
-      console.log(data);
+      // console.log(data);
 
       const newData = data.data.results.filter(
         (newItem) => !details.some((prevItem) => prevItem.id === newItem.id)
@@ -380,7 +380,7 @@ const Home = () => {
         </motion.div>
       </motion.div>
 
-      <div className="w-full bg-black pt-[30vh] text-white flex flex-col gap-5 overflow-x-auto overflow-hidden no-scrollbar">
+      <div className="w-full bg-black pt-[13vh] text-white flex flex-col gap-5 overflow-x-auto overflow-hidden no-scrollbar">
       <div className="flex items-center gap-4">
           {options.map((langOption, index) => (
             <button
@@ -398,7 +398,7 @@ const Home = () => {
       
       <div className="w-full  bg-black  min-h-[63vh] pb-[30vh]  text-white p-5 flex flex-col gap-5 overflow-auto ">
         <div className="trending songs flex flex-col gap-3 w-full ">
-          <h3 className="text-4xl h-[5vh] font-bold text-[#0ff50f] capitalize ">
+          <h3 className="text-3xl h-[5vh] font-semibold text-[#0ff50f] capitalize ">
             {language} <span className="text-white">Songs</span>
           </h3>
           <motion.div className="songs px-8 sm:px-5 py-6 flex gap-6 overflow-x-auto overflow-hidden w-full no-scrollbar ">
@@ -409,7 +409,7 @@ const Home = () => {
                 whileHover={{
                   scale: 1.1
                 }}
-                className="flex-shrink-0 h-[50%] w-[20%] sm:w-[40%] rounded-lg cursor-pointer flex flex-col transition-all duration-300 shadow-md group relative"
+                className="flex-shrink-0 h-[50%] w-[20%] sm:w-[30%] rounded-lg cursor-pointer flex flex-col transition-all duration-300 shadow-md group relative"
               >
                 <motion.div className="w-full sm:w-full h-[75%] sm:h-[75%] rounded-md overflow-hidden flex items-center justify-center mb-4">
                   <motion.img
@@ -445,7 +445,7 @@ const Home = () => {
 
                 {songlink.length > 0 && (
                   <i
-                    className={`absolute top-[30%] left-[40%] opacity-75 text-6xl text-[#0ff50f] ${
+                    className={`absolute top-[30%] left-[40%] sm:top-[35%] sm:left-[65%] opacity-75 text-6xl text-[#0ff50f] sm:text-4xl ${
                       t.id === songlink[0]?.id ? "block" : "hidden"
                     } ${
                       audiocheck
@@ -459,7 +459,7 @@ const Home = () => {
           </motion.div>
         </div>
         <div className="charts w-full flex flex-col gap-3   ">
-          <h3 className="text-4xl h-[5vh] font-bold text-[#0ff50f] capitalize">
+          <h3 className="text-3xl h-[5vh] font-semibold text-[#0ff50f] capitalize">
             Charts
           </h3>
           <div className="chartsdata px-8 sm:px-5 py-6 flex gap-6 overflow-x-auto w-full no-scrollbar">
@@ -501,7 +501,7 @@ const Home = () => {
           </div>
         </div>
         <div className="playlists w-full  flex flex-col gap-3 ">
-          <h3 className="text-4xl h-[5vh] font-bold text-[#0ff50f] capitalize">
+          <h3 className="text-3xl h-[5vh] font-semibold text-[#0ff50f] capitalize">
             Playlists
           </h3>
           <div className="playlistsdata px-8 sm:px-5 py-6 flex gap-6 overflow-x-auto w-full no-scrollbar">
@@ -665,14 +665,11 @@ const Home = () => {
                   <i className="ri-skip-right-fill"></i>
                 </button>
               </div>
-
-              <div className="flex justify-between items-center w-full sm:w-[80%]">
-                {/* Current Time */}
+              <div className="flex justify-between items-center w-full sm:w-[80%] sm:hidden">
                 <span className="text-sm text-white">
                   {formatTime(audioRef.current?.currentTime || 0)}
                 </span>
 
-                {/* Time Slider */}
                 <input
                   type="range"
                   className="time-slider cursor-pointer w-full mx-2"
@@ -704,14 +701,13 @@ const Home = () => {
                   }}
                 />
 
-                {/* Total Duration */}
                 <span className="text-sm text-white">
                   {formatTime(audioRef.current?.duration || 0)}
                 </span>
               </div>
             </div>
 
-            <motion.div className="flex items-center gap-4 sm:gap-2 justify-end">
+            <motion.div className="flex items-center gap-4 sm:gap-2 justify-end sm:hidden">
               <i
                 onClick={() => likehandle(e)}
                 className={`text-2xl cursor-pointer ${

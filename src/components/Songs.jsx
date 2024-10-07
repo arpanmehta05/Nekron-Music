@@ -392,12 +392,12 @@ const Songs = () => {
         endMessage={<p className="bg-[#121111] text-white">No more items</p>}
       >
         <div className="pt-[10vh] pb-[30vh] overflow-hidden overflow-y-auto">
-          <div className="flex w-full bg-black text-white p-10 sm:p-3 sm:gap-3 sm:block flex-wrap gap-10 justify-center">
+          <div className="flex w-full bg-black text-white p-10 sm:p-3 sm:gap-3 flex-wrap gap-10 justify-center">
             {search?.map((d, i) => (
               <motion.div
                 title="Click on song image or name to play the song"
                 key={i}
-                className="flex-shrink-0 h-[50%] w-[20%] sm:w-[40%] rounded-lg cursor-pointer flex flex-col transition-all duration-300 shadow-md group relative mb-3"
+                className="flex-shrink-0 h-[50%] w-[15%] sm:w-[40%] rounded-lg cursor-pointer flex flex-col transition-all duration-300 shadow-md group relative mb-3"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
                 onClick={() => audioseter(i)}
@@ -417,7 +417,7 @@ const Songs = () => {
                   />
                   {songlink.length > 0 && (
                     <i
-                      className={`absolute top-[30%] left-[40%] opacity-75 text-6xl text-[#0ff50f] ${
+                      className={`absolute top-[30%] left-[40%] opacity-75 text-6xl sm:text-4xl sm:top-[50%] sm:left-[75%] text-[#0ff50f] ${
                         d.id === songlink[0]?.id ? "block" : "hidden"
                       } ${
                         audiocheck
@@ -571,13 +571,10 @@ const Songs = () => {
                 </button>
               </div>
 
-              <div className="flex justify-between items-center w-full sm:w-[80%]">
-                {/* Current Time */}
+              <div className="flex justify-between items-center w-full sm:w-[80%] sm:hidden">
                 <span className="text-sm text-white">
                   {formatTime(audioRef.current?.currentTime || 0)}
                 </span>
-
-                {/* Time Slider */}
                 <input
                   type="range"
                   className="time-slider cursor-pointer w-full mx-2"
@@ -608,15 +605,13 @@ const Songs = () => {
           #fff 0%)`,
                   }}
                 />
-
-                {/* Total Duration */}
                 <span className="text-sm text-white">
                   {formatTime(audioRef.current?.duration || 0)}
                 </span>
               </div>
             </div>
 
-            <motion.div className="flex items-center gap-4 sm:gap-2 justify-end">
+            <motion.div className="flex items-center gap-4 sm:gap-2 justify-end sm:hidden">
               <i
                 onClick={() => likehandle(e)}
                 className={`text-2xl cursor-pointer ${
