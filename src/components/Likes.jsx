@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import {useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import image from "../../public/liked.png";
-import {
-  motion,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
 
 function Likes() {
@@ -246,13 +244,15 @@ function Likes() {
       </div>
 
       {details.length > 0 ? (
-        <div className="flex items-center justify-evenly py-20">
+        <div className="flex sm:flex-col items-center justify-evenly py-20 sm:py-10">
           <img
             src={image}
             alt="Liked songs"
-            className="w-[300px] h-[300px] object-cover rounded-md"
+            className="w-[300px] h-[300px] sm:w-[200px] sm:h-[200px] object-cover rounded-md"
           />
-          <h2 className="text-7xl font-bold text-[#0ff50f]">Liked Songs</h2>
+          <h2 className="text-7xl sm:text-3xl sm:mt-4 sm:font-medium font-bold text-[#0ff50f]">
+            Liked Songs
+          </h2>
         </div>
       ) : (
         <div></div>
@@ -264,13 +264,13 @@ function Likes() {
             <div className="flex items-center justify-center w-[5%]">
               <p className="text-2xl font-bold">#</p>
             </div>
-            <div className="flex items-center justify-start w-[30%]">
+            <div className="flex items-center justify-start w-[30%] sm:w-[65%]">
               <p className="text-2xl font-bold">Title</p>
             </div>
-            <div className="flex items-center justify-start w-[25%]">
+            <div className="flex items-center justify-start w-[25%] sm:hidden">
               <p className="text-2xl font-bold">Album</p>
             </div>
-            <div className="flex items-center justify-center w-[30%]">
+            <div className="flex items-center justify-center w-[30%] sm:hidden">
               <p className="text-3xl font-medium">
                 <i className="ri-time-line"></i>
               </p>
@@ -292,12 +292,10 @@ function Likes() {
                   {i + 1}
                 </p>
               </div>
-              <div
-                className="flex items-center gap-4 w-[30%] pl-7"
-              >
+              <div className="flex items-center gap-4 w-[30%] sm:w-[78%] pl-7">
                 <motion.img
                   viewport={{ once: true }}
-                  className="w-[60px] h-[60px] sm:w-[80px] sm:h-[80px] rounded-md"
+                  className="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] rounded-md"
                   src={d.image[2].url}
                   alt=""
                 />
@@ -309,10 +307,24 @@ function Likes() {
                   >
                     {d.name}
                   </h3>
+                  <p
+                    className={`text-base font-semibold hide-on-laptop ${
+                      d.id === songlink[0]?.id
+                        ? "text-[#0ff50f]"
+                        : "text-gray-300"
+                    }`}
+                  >
+                    {d.album.name.length > 20
+                      ? d.album.name
+                          .slice(0, 20)
+                          .trim()
+                          .replace(/[\s\(\[\{]*$/, "") + "..."
+                      : d.album.name}
+                  </p>
                 </div>
               </div>
 
-              <div className="flex items-center w-[25%] pl-[58px]">
+              <div className="flex items-center w-[25%] pl-[58px] sm:hidden">
                 <p
                   className={`text-base font-bold ${
                     d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
@@ -322,36 +334,38 @@ function Likes() {
                 </p>
               </div>
 
-              <div className="flex items-center w-[30%] pl-[20%]">
-                <p className={`text-base font-bold ${
+              <div className="flex items-center w-[30%] pl-[20%] sm:hidden">
+                <p
+                  className={`text-base font-bold ${
                     d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
-                  }`}>
+                  }`}
+                >
                   {formatTime(d.duration)}
-                  </p>
+                </p>
               </div>
 
               <div className="flex items-center justify-center gap-4">
-                {d.id === songlink[0]?.id ? (
-                  <i
-                    className={`${
-                      audiocheck ? "ri-pause-fill" : "ri-play-fill"
-                    } text-3xl text-[#0ff50f]`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      audiocheck
-                        ? audioRef.current.pause()
-                        : audioRef.current.play();
-                    }}
-                  ></i>
-                ) : (
-                  <i
-                    className="ri-play-fill text-3xl text-gray-400 hover:text-white"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      audioseter(i);
-                    }}
-                  ></i>
-                )}
+                  {d.id === songlink[0]?.id ? (
+                    <i
+                      className={`${
+                        audiocheck ? "ri-pause-fill" : "ri-play-fill"
+                      } text-3xl text-[#0ff50f]`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        audiocheck
+                          ? audioRef.current.pause()
+                          : audioRef.current.play();
+                      }}
+                    ></i>
+                  ) : (
+                    <i
+                      className="ri-play-fill text-3xl text-gray-400 hover:text-white"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        audioseter(i);
+                      }}
+                    ></i>
+                  )}
 
                 <i
                   title="Remove Song"
@@ -466,13 +480,10 @@ function Likes() {
                   </button>
                 </div>
 
-                <div className="flex justify-between items-center w-full sm:w-[80%]">
-                  {/* Current Time */}
+                <div className="flex justify-between items-center w-full sm:w-[80%] sm:hidden">
                   <span className="text-sm text-white">
                     {formatTime(audioRef.current?.currentTime || 0)}
                   </span>
-
-                  {/* Time Slider */}
                   <input
                     type="range"
                     className="time-slider cursor-pointer w-full mx-2"
@@ -503,15 +514,13 @@ function Likes() {
           #fff 0%)`,
                     }}
                   />
-
-                  {/* Total Duration */}
                   <span className="text-sm text-white">
                     {formatTime(audioRef.current?.duration || 0)}
                   </span>
                 </div>
               </div>
 
-              <motion.div className="flex items-center gap-4 sm:gap-2 justify-end">
+              <motion.div className="flex items-center gap-4 sm:gap-2 justify-end sm:hidden">
                 <i
                   onClick={() => removehandle(e.id, i)}
                   className={`text-2xl cursor-pointer text-[#0ff50f] ri-heart-3-fill`}

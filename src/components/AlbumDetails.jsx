@@ -1,11 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import {useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Loading from "./Loading";
-import {
-  motion,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import { Toaster } from "react-hot-toast";
+import "./dropdown.css";
 
 const AlbumDetails = () => {
   const navigate = useNavigate();
@@ -299,13 +298,15 @@ const AlbumDetails = () => {
       </div>
 
       {image ? (
-        <div className="flex items-center justify-evenly py-20">
+        <div className="flex sm:flex-col items-center justify-evenly py-20 sm:py-10">
           <img
             src={image}
-            alt="Liked songs"
-            className="w-[300px] h-[300px] object-cover rounded-md"
+            alt={name}
+            className="w-[300px] h-[300px] sm:w-[200px] sm:h-[200px] object-cover rounded-md"
           />
-          <h2 className="text-7xl font-bold text-[#0ff50f]">{name}</h2>
+          <h2 className="text-7xl sm:text-3xl sm:mt-4 sm:font-medium font-bold text-[#0ff50f]">
+            {name}
+          </h2>
         </div>
       ) : (
         <div></div>
@@ -316,13 +317,13 @@ const AlbumDetails = () => {
           <div className="flex items-center justify-center w-[5%]">
             <p className="text-2xl font-bold">#</p>
           </div>
-          <div className="flex items-center justify-start w-[30%]">
+          <div className="flex items-center justify-start w-[30%] sm:w-[65%]">
             <p className="text-2xl font-bold">Title</p>
           </div>
-          <div className="flex items-center justify-start w-[25%]">
+          <div className="flex items-center justify-start w-[25%] sm:hidden">
             <p className="text-2xl font-bold">PLays</p>
           </div>
-          <div className="flex items-center justify-center w-[30%]">
+          <div className="flex items-center justify-center w-[30%] sm:hidden">
             <p className="text-3xl font-medium">
               <i className="ri-time-line"></i>
             </p>
@@ -346,10 +347,10 @@ const AlbumDetails = () => {
               </p>
             </div>
 
-            <div className="flex items-center gap-4 w-[30%] pl-7">
+            <div className="flex items-center gap-4 w-[30%] sm:w-[78%] pl-7">
               <motion.img
                 viewport={{ once: true }}
-                className="w-[60px] h-[60px] sm:w-[80px] sm:h-[80px] rounded-md"
+                className="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] rounded-md"
                 src={d.image[2].url}
                 alt=""
               />
@@ -361,10 +362,19 @@ const AlbumDetails = () => {
                 >
                   {d.name}
                 </h3>
+                <p
+                  className={`text-base font-semibold hide-on-laptop ${
+                    d.id === songlink[0]?.id
+                      ? "text-[#0ff50f]"
+                      : "text-gray-300"
+                  }`}
+                >
+                  {d.playCount}
+                </p>
               </div>
             </div>
 
-            <div className="flex items-center w-[25%] pl-[64px]">
+            <div className="flex items-center w-[25%] pl-[58px] sm:hidden">
               <p
                 className={`text-base font-bold ${
                   d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
@@ -374,7 +384,7 @@ const AlbumDetails = () => {
               </p>
             </div>
 
-            <div className="flex items-center w-[30%] pl-[20%]">
+            <div className="flex items-center w-[30%] pl-[20%] sm:hidden">
               <p
                 className={`text-base font-bold ${
                   d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
@@ -507,7 +517,7 @@ const AlbumDetails = () => {
                 </button>
               </div>
 
-              <div className="flex justify-between items-center w-full sm:w-[80%]">
+              <div className="flex justify-between items-center w-full sm:w-[80%] sm:hidden">
                 <span className="text-sm text-white">
                   {formatTime(audioRef.current?.currentTime || 0)}
                 </span>
@@ -549,7 +559,7 @@ const AlbumDetails = () => {
               </div>
             </div>
 
-            <motion.div className="flex items-center gap-4 sm:gap-2 justify-end">
+            <motion.div className="flex items-center gap-4 sm:gap-2 justify-end sm:hidden">
               <i
                 onClick={() => likehandle(e)}
                 className={`text-2xl cursor-pointer ${

@@ -120,34 +120,35 @@ const Album = () => {
           <motion.div className="w-full overflow-hidden overflow-y-auto h-[85vh] sm:min-h-[85vh] flex flex-wrap p-5 gap-8 justify-center bg-[#131212]">
             {albums?.map((e, i) => (
               <motion.div
-                key={i}
-                onClick={() =>
-                  navigate(`/albums/details/${e.id}`, {
-                    state: {
-                      image: e.image[2]?.url,
-                      name: e.name,
-                    },
-                  })
-                }
-                whileHover={{ scale: 1.05 }}
-                className="w-[20vw] sm:w-[45vw] h-[50vh] sm:h-[40vh] bg-[#1c1c1e] hover:bg-[#333] transition-all duration-300 rounded-xl shadow-lg cursor-pointer flex flex-col justify-between p-5 relative group"
-              >
-                <div className="w-full h-[80%] rounded-md overflow-hidden">
-                  <img
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    src={e?.image[2]?.url}
-                    alt={e.name}
-                  />
-                </div>
-                <p className="text-white text-lg font-semibold mt-4 group-hover:text-[#0ff50f] transition-colors duration-300">
-                  {e.name.length > 20
-                    ? e.name
-                        .slice(0, 20)
-                        .trim()
-                        .replace(/[\s\(\[\{]*$/, "") + "..."
-                    : e.name}
-                </p>
-              </motion.div>
+              key={i}
+              onClick={() =>
+                navigate(`/albums/details/${e.id}`, {
+                  state: {
+                    image: e.image[2]?.url,
+                    name: e.name,
+                    album: e.album,
+                  },
+                })
+              }
+              whileHover={{ scale: 1.05 }}
+              className="w-[20vw] sm:w-[40vw] h-[50vh] sm:h-[25vh] bg-[#1c1c1e] hover:bg-[#333] transition-all duration-300 cursor-pointer flex flex-col relative group"
+            >
+              <div className="w-full h-[80%] rounded-t-md overflow-hidden">
+                <img
+                  className="w-full h-full object-cover transition-transform duration-500"
+                  src={e?.image[2]?.url}
+                  alt={e.name}
+                />
+              </div>
+              <p className="text-white text-lg sm:text-[12px] h-[20%] w-full font-medium mt-7 sm:mt-3 group-hover:text-[#0ff50f] transition-colors duration-300 px-3 sm:px-3">
+                {e.name.length > 20
+                  ? e.name
+                      .slice(0, 20)
+                      .trim()
+                      .replace(/[\s\(\[\{]*$/, "") + "..."
+                  : e.name}
+              </p>
+            </motion.div>
             ))}
           </motion.div>
         </motion.div>

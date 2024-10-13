@@ -144,3 +144,9 @@
   background: #0ff50f;
   transform: scale(1.1);
 }
+
+@media (min-width: 1024px) {
+  .hide-on-laptop {
+    display: none;
+  }
+}

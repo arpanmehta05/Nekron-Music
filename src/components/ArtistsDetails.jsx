@@ -3,9 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 import InfiniteScroll from "react-infinite-scroll-component";
-import {
-  motion,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
 
 const ArtistsDetails = () => {
@@ -28,6 +26,9 @@ const ArtistsDetails = () => {
   const [audiocheck, setaudiocheck] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
+  const playlistDetails = location.state || {};
+  const image = playlistDetails?.image || null;
+  const playlistName = playlistDetails?.name || "Unknown Playlist";
 
   const Getdetails = async () => {
     try {
@@ -360,6 +361,24 @@ const ArtistsDetails = () => {
           className="flex items-center justify-center w-12 h-12 border border-gray-300 bg-white rounded-full cursor-pointer text-3xl text-gray-700 ri-arrow-left-line hover:bg-gray-200 hover:text-green-500 transition"
         ></i>
       </div>
+      {image ? (
+        <div className="flex sm:flex-col items-center justify-evenly py-20 sm:py-10">
+          <img
+            src={image}
+            alt={playlistName}
+            className="w-[300px] h-[300px] sm:w-[200px] sm:h-[200px] object-cover rounded-md"
+          />
+          <h2 className="text-7xl sm:text-3xl sm:mt-4 sm:font-medium font-bold text-[#0ff50f]">
+            {playlistName}
+          </h2>
+        </div>
+      ) : (
+        <div className="flex justify-center items-center py-20">
+          <p className="text-4xl font-bold text-[#0ff50f]">
+            No Image Available
+          </p>
+        </div>
+      )}
       <InfiniteScroll
         dataLength={details.length}
         next={newdata}
@@ -369,54 +388,136 @@ const ArtistsDetails = () => {
         }
         endMessage={<p className="bg-[#131212] text-zinc-300">No more items</p>}
       >
-        <div className="w-full pt-[10vh] sm:pt-[10vh] pb-[30vh] sm:pb-[35vh] text-white p-6 bg-[#131212] flex flex-wrap justify-center gap-5 overflow-y-auto">
+        <div className="flex flex-col w-full pb-10 px-4 bg-[#131212] text-white min-h-[65vh]">
+          <div className="border-b-[1px] border-gray-400 flex items-center justify-between p-4 transition duration-300">
+            <div className="flex items-center justify-center w-[5%]">
+              <p className="text-2xl font-bold">#</p>
+            </div>
+            <div className="flex items-center justify-start w-[30%] sm:w-[65%]">
+              <p className="text-2xl font-bold">Title</p>
+            </div>
+            <div className="flex items-center justify-start w-[25%] sm:hidden">
+              <p className="text-2xl font-bold">Album</p>
+            </div>
+            <div className="flex items-center justify-center w-[30%] sm:hidden">
+              <p className="text-3xl font-medium">
+                <i className="ri-time-line"></i>
+              </p>
+            </div>
+          </div>
           {details?.map((d, i) => (
             <div
+              title="click on song image or name to play the song"
               key={i}
-              className="relative flex flex-col items-center bg-black rounded-md w-[20%] sm:w-[80%] p-4 hover:scale-105 hover:bg-gray-900 transition-transform duration-300 shadow-lg cursor-pointer"
+              className="flex items-center justify-between p-4 mb-4 hover:bg-gray-800 transition duration-300 rounded-md cursor-pointer"
               onClick={() => audioseter(i)}
             >
-              <div className="w-full relative">
-                <img
-                  className="w-full rounded-md"
+              <div className="flex items-center justify-center w-[5%]">
+                <p
+                  className={`text-base font-semibold ${
+                    d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
+                  }`}
+                >
+                  {i + 1}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-4 w-[30%] sm:w-[78%] pl-7">
+                <motion.img
+                  viewport={{ once: true }}
+                  className="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] rounded-md"
                   src={d.image[2].url}
-                  alt={d.name}
+                  alt=""
                 />
-                {d.id === songlink[0]?.id && (
-                  <i
-                    className={`absolute top-1 right-2 text-4xl text-[#0ff50f] ${
-                      audiocheck
-                        ? "ri-pause-circle-fill"
-                        : "ri-play-circle-fill"
+                <div className="flex flex-col">
+                  <h3
+                    className={`text-base font-bold ${
+                      d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
                     }`}
+                  >
+                    {d.name.length > 20
+                      ? d.name
+                          .slice(0, 20)
+                          .trim()
+                          .replace(/[\s\(\[\{]*$/, "") + "..."
+                      : d.name}
+                  </h3>
+                  <p
+                    className={`text-base font-semibold hide-on-laptop ${
+                      d.id === songlink[0]?.id
+                        ? "text-[#0ff50f]"
+                        : "text-gray-300"
+                    }`}
+                  >
+                    {d.album.name.length > 20
+                      ? d.album.name
+                          .slice(0, 20)
+                          .trim()
+                          .replace(/[\s\(\[\{]*$/, "") + "..."
+                      : d.album.name}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center w-[25%] pl-[58px] sm:hidden">
+                <p
+                  className={`text-base font-bold ${
+                    d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
+                  }`}
+                >
+                  {d.album.name.length > 20
+                    ? d.album.name
+                        .slice(0, 20)
+                        .trim()
+                        .replace(/[\s\(\[\{]*$/, "") + "..."
+                    : d.album.name}
+                </p>
+              </div>
+
+              <div className="flex items-center w-[30%] pl-[20%] sm:hidden">
+                <p
+                  className={`text-base font-bold ${
+                    d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
+                  }`}
+                >
+                  {formatTime(d.duration)}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-center gap-4">
+                {d.id === songlink[0]?.id ? (
+                  <i
+                    className={`${
+                      audiocheck ? "ri-pause-fill" : "ri-play-fill"
+                    } text-3xl text-[#0ff50f]`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      audiocheck
+                        ? audioRef.current.pause()
+                        : audioRef.current.play();
+                    }}
+                  ></i>
+                ) : (
+                  <i
+                    className="ri-play-fill text-3xl text-gray-400 hover:text-white"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      audioseter(i);
+                    }}
                   ></i>
                 )}
-              </div>
-              <div className="w-full flex flex-col items-center gap-2 mt-2">
-                <h3
-                  className={`text-lg font-semibold ${
-                    d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
-                  } text-center`}
-                >
-                  {d.name.length > 20 ? d.name.slice(0, 20) + "..." : d.name}
-                </h3>
-                <h4 className="text-sm text-zinc-50 text-center">
-                  {d.album.name.length > 25
-                    ? d.album.name.slice(0, 25) + "..."
-                    : d.album.name}
-                </h4>
-              </div>
-              <div className="absolute bottom-[84%] left-5">
+
                 <i
+                  title="Remove Song"
                   onClick={(e) => {
                     e.stopPropagation();
-                    likehandle2(d);
+                    removehandle(d.id, i);
                   }}
-                  className={`ri-heart-3-fill text-3xl ${
+                  className={`text-2xl ${
                     existingData?.find((element) => element?.id === d?.id)
-                      ? "text-[#0ff50f]"
-                      : "text-white"
-                  }`}
+                      ? "text-[#0ff50f] ri-heart-fill"
+                      : "text-gray-400 hover:text-white ri-heart-line"
+                  } cursor-pointer`}
                 ></i>
               </div>
             </div>
@@ -507,13 +608,10 @@ const ArtistsDetails = () => {
                 </button>
               </div>
 
-              <div className="flex justify-between items-center w-full sm:w-[80%]">
-                {/* Current Time */}
+              <div className="flex justify-between items-center w-full sm:w-[80%] sm:hidden">
                 <span className="text-sm text-white">
                   {formatTime(audioRef.current?.currentTime || 0)}
                 </span>
-
-                {/* Time Slider */}
                 <input
                   type="range"
                   className="time-slider cursor-pointer w-full mx-2"
@@ -544,15 +642,13 @@ const ArtistsDetails = () => {
           #fff 0%)`,
                   }}
                 />
-
-                {/* Total Duration */}
                 <span className="text-sm text-white">
                   {formatTime(audioRef.current?.duration || 0)}
                 </span>
               </div>
             </div>
 
-            <motion.div className="flex items-center gap-4 sm:gap-2 justify-end">
+            <motion.div className="flex items-center gap-4 sm:gap-2 justify-end sm:hidden">
               <i
                 onClick={() => likehandle(e)}
                 className={`text-2xl cursor-pointer ${
