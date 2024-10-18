@@ -83,46 +83,33 @@ const ArtistsDetails = () => {
   }
 
   function likehandle(i) {
-    // Retrieve existing data from localStorage
     let existingData = localStorage.getItem("likeData");
-
-    // Initialize an array to hold the updated data
     let updatedData = [];
-
-    // If existing data is found, parse it from JSON
     if (existingData) {
       updatedData = JSON.parse(existingData);
     }
-
-    // Check if the new data already exists in the existing data
     let exists = updatedData.some((item) => item.id === i.id);
 
     if (!exists) {
-      // If not, add the new data
       updatedData.push(i);
-      // Store the updated data back into localStorage
       localStorage.setItem("likeData", JSON.stringify(updatedData));
       setlike(true);
     } else {
       setlike(false);
       let existingData = localStorage.getItem("likeData");
 
-      // If no data exists, there's nothing to remove
       if (!existingData) {
         console.log("No data found in localStorage.");
         return;
       }
-      // Parse the existing data from JSON
+
       let updatedData = JSON.parse(existingData);
 
-      // Find the index of the song with the given ID in the existing data
       const indexToRemove = updatedData.findIndex((item) => item.id === i.id);
 
-      // If the song is found, remove it from the array
       if (indexToRemove !== -1) {
         updatedData.splice(indexToRemove, 1);
 
-        // Store the updated data back into localStorage
         localStorage.setItem("likeData", JSON.stringify(updatedData));
       }
     }
@@ -154,53 +141,40 @@ const ArtistsDetails = () => {
     const value = e.target.value;
     audioRef.current.volume = value;
 
-    // Set the dynamic gradient for the volume bar
     e.target.style.background = `linear-gradient(to right, #0ff50f 0%, #0ff50f ${
       value * 100
     }%, #ccc ${value * 100}%, #ccc 100%)`;
   };
 
   function likehandle2(i) {
-    // Retrieve existing data from localStorage
     let existingData = localStorage.getItem("likeData");
-
-    // Initialize an array to hold the updated data
     let updatedData = [];
-
-    // If existing data is found, parse it from JSON
     if (existingData) {
       updatedData = JSON.parse(existingData);
     }
 
-    // Check if the new data already exists in the existing data
     let exists = updatedData.some((item) => item.id === i.id);
 
     if (!exists) {
-      // If not, add the new data
       updatedData.push(i);
-      // Store the updated data back into localStorage
+
       localStorage.setItem("likeData", JSON.stringify(updatedData));
       setlike2(!like2);
     } else {
       setlike2(!like2);
       let existingData = localStorage.getItem("likeData");
 
-      // If no data exists, there's nothing to remove
       if (!existingData) {
         console.log("No data found in localStorage.");
         return;
       }
-      // Parse the existing data from JSON
-      let updatedData = JSON.parse(existingData);
 
-      // Find the index of the song with the given ID in the existing data
+      let updatedData = JSON.parse(existingData);
       const indexToRemove = updatedData.findIndex((item) => item.id === i.id);
 
-      // If the song is found, remove it from the array
       if (indexToRemove !== -1) {
         updatedData.splice(indexToRemove, 1);
 
-        // Store the updated data back into localStorage
         localStorage.setItem("likeData", JSON.stringify(updatedData));
       }
     }
@@ -223,7 +197,6 @@ const ArtistsDetails = () => {
       });
 
       navigator.mediaSession.setActionHandler("play", function () {
-        // Handle play action
         if (audioRef.current) {
           audioRef.current.play().catch((error) => {
             console.error("Play error:", error);
@@ -232,7 +205,6 @@ const ArtistsDetails = () => {
       });
 
       navigator.mediaSession.setActionHandler("pause", function () {
-        // Handle pause action
         if (audioRef.current) {
           audioRef.current.pause().catch((error) => {
             console.error("Pause error:", error);
@@ -270,34 +242,6 @@ const ArtistsDetails = () => {
       setsonglink([details[details.length - 1]]);
     }
   }
-  const handleDownloadSong = (url, name, poster) => {
-    return toast.promise(
-      new Promise(async (resolve, reject) => {
-        try {
-          const res = await fetch(url);
-          const blob = await res.blob();
-          const link = document.createElement("a");
-          link.href = URL.createObjectURL(blob);
-          link.download = `${name}.mp3`;
-
-          document.body.appendChild(link);
-          link.click();
-
-          document.body.removeChild(link);
-
-          resolve(); // Resolve the promise once the download is complete
-        } catch (error) {
-          console.log("Error fetching or downloading files", error);
-          reject("Error downloading song");
-        }
-      }),
-      {
-        loading: `Song ${name} Downloading...`, // Loading message
-        success: `Song Downloaded ✅`, // Success message
-        error: <b>Error downloading song.</b>, // Error message
-      }
-    );
-  };
 
   function seccall() {
     const intervalId = setInterval(() => {
@@ -325,15 +269,9 @@ const ArtistsDetails = () => {
   }, [details, like, songlink, like2, existingData]);
 
   useEffect(() => {
-    // Retrieve all data from localStorage
     const allData = localStorage.getItem("likeData");
-
-    // Check if data exists in localStorage
     if (allData) {
-      // Parse the JSON string to convert it into a JavaScript object
       const parsedData = JSON.parse(allData);
-
-      // Now you can use the parsedData object
       setexistingData(parsedData);
     } else {
       console.log("No data found in localStorage.");

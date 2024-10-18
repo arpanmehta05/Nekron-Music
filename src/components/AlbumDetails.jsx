@@ -13,6 +13,7 @@ const AlbumDetails = () => {
   let newid = id.split("/");
   let finalid = newid[3];
 
+  const [showAnimation, setShowAnimation] = useState(null);
   const [forceRender, setForceRender] = useState(false);
   const { image, name } = location.state || {};
   const [details, setdetails] = useState([]);
@@ -170,8 +171,6 @@ const AlbumDetails = () => {
   const handleVolumeChange = (e) => {
     const value = e.target.value;
     audioRef.current.volume = value;
-
-    // Set the dynamic gradient for the volume bar
     e.target.style.background = `linear-gradient(to right, #0ff50f 0%, #0ff50f ${
       value * 100
     }%, #ccc ${value * 100}%, #ccc 100%)`;
@@ -329,14 +328,28 @@ const AlbumDetails = () => {
             </p>
           </div>
         </div>
-
         {details?.map((d, i) => (
           <div
             title="click on song image or name to play the song"
             key={i}
-            className="flex items-center justify-between p-4 mb-4 hover:bg-gray-800 transition duration-300 rounded-md cursor-pointer"
-            onClick={() => audioseter(i)}
+            className="relative flex items-center justify-between p-4 mb-4 hover:bg-gray-800 transition duration-300 rounded-md cursor-pointer"
+            onClick={() => {
+              audioseter(i);
+              setShowAnimation(i);
+              setTimeout(() => setShowAnimation(null), 2000);
+            }}
           >
+            {showAnimation === i && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+                className="absolute inset-0 z-10 flex items-center justify-center bg-[#1e1e1e] opacity-60 bg-opacity-50"
+              >
+              </motion.div>
+            )}
+
             <div className="flex items-center justify-center w-[5%]">
               <p
                 className={`text-base font-semibold ${
@@ -413,6 +426,8 @@ const AlbumDetails = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     audioseter(i);
+                    setShowAnimation(i);
+                    setTimeout(() => setShowAnimation(null), 2000);
                   }}
                 ></i>
               )}
