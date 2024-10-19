@@ -1,9 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {useNavigate } from "react-router-dom";
-import {
-  motion,
-} from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Toaster } from "react-hot-toast";
 
 const Playlist = () => {
@@ -22,7 +20,7 @@ const Playlist = () => {
 
       setplaylist((prevState) => [...prevState, ...data?.data?.results]);
 
-      localStorage.setItem("playlist", JSON.stringify(playlist));   // local storage is here to store the data
+      localStorage.setItem("playlist", JSON.stringify(playlist)); // local storage is here to store the data
       // marked for future use for addign firebase and login feature
     } catch (error) {
       console.log("error", error);
@@ -109,40 +107,51 @@ const Playlist = () => {
             <i className="  ri-search-2-line"></i>
           </p>
         </motion.div>
-        <motion.div className="w-full overflow-hidden overflow-y-auto h-[85vh] sm:min-h-[85vh] flex flex-wrap p-5 gap-8 justify-center bg-[#131212]">
-          {playlist?.map((e, i) => (
-            <motion.div
-              key={i}
-              onClick={() =>
-                navigate(`/playlist/details/${e.id}`, {
-                  state: {
-                    image: e.image[2]?.url,
-                    name: e.name,
-                    album: e.album,
-                  },
-                })
-              }
-              whileHover={{ scale: 1.05 }}
-              className="w-[20vw] sm:w-[40vw] h-[50vh] sm:h-[25vh] bg-[#1c1c1e] hover:bg-[#333] transition-all duration-300 cursor-pointer flex flex-col relative group"
-            >
-              <div className="w-full h-[80%] rounded-t-md overflow-hidden">
-                <img
-                  className="w-full h-full object-cover transition-transform duration-500"
-                  src={e?.image[2]?.url}
-                  alt={e.name}
-                />
-              </div>
-              <p className="text-white text-lg sm:text-[12px] h-[20%] w-full font-medium mt-7 sm:mt-3 group-hover:text-[#0ff50f] transition-colors duration-300 px-3 sm:px-3">
-                {e.name.length > 20
-                  ? e.name
-                      .slice(0, 20)
-                      .trim()
-                      .replace(/[\s\(\[\{]*$/, "") + "..."
-                  : e.name}
-              </p>
-            </motion.div>
-          ))}
-        </motion.div>
+        {playlist.length > 0 ? (
+          <motion.div className="w-full overflow-hidden overflow-y-auto h-[85vh] sm:min-h-[85vh] flex flex-wrap p-5 gap-8 justify-center bg-[#131212]">
+            {playlist?.map((e, i) => (
+              <motion.div
+                key={i}
+                onClick={() =>
+                  navigate(`/playlist/details/${e.id}`, {
+                    state: {
+                      image: e.image[2]?.url,
+                      name: e.name,
+                      album: e.album,
+                    },
+                  })
+                }
+                whileHover={{ scale: 1.05 }}
+                className="w-[20vw] sm:w-[40vw] h-[50vh] sm:h-[25vh] bg-[#1c1c1e] hover:bg-[#333] transition-all duration-300 cursor-pointer flex flex-col relative group"
+              >
+                <div className="w-full h-[80%] rounded-t-md overflow-hidden">
+                  <img
+                    className="w-full h-full object-cover transition-transform duration-500"
+                    src={e?.image[2]?.url}
+                    alt={e.name}
+                  />
+                </div>
+                <p className="text-white text-lg sm:text-[12px] h-[20%] w-full font-medium mt-7 sm:mt-3 group-hover:text-[#0ff50f] transition-colors duration-300 px-3 sm:px-3">
+                  {e.name.length > 20
+                    ? e.name
+                        .slice(0, 20)
+                        .trim()
+                        .replace(/[\s\(\[\{]*$/, "") + "..."
+                    : e.name}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          <div className="absolute w-[30%] sm:w-[60%] left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer">
+            <p className="text-center text-3xl font-bold text-white">
+              Find the playlist of your choice
+            </p>
+            <p className="text-center text-xl font-semibold text-white">
+              and groove to its curated tunes <i className="ri-music-2-line"></i>
+            </p>
+          </div>
+        )}
       </motion.div>
     </motion.div>
   );

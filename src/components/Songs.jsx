@@ -1,9 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  motion,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import { Toaster } from "react-hot-toast";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "./dropdown.css";
@@ -292,11 +290,7 @@ const Songs = () => {
         searchClick();
       }
     };
-
-    // Add the event listener
     window.addEventListener("keydown", handleKeyDown);
-
-    // Clean up the event listener when the component unmounts
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -380,6 +374,7 @@ const Songs = () => {
         }
         endMessage={<p className="bg-[#121111] text-white">No more items</p>}
       >
+        {search.length>0 ? (
         <div className="pt-[10vh] pb-[30vh] overflow-hidden overflow-y-auto">
           <div className="flex w-full bg-black text-white p-10 sm:p-3 sm:gap-3 flex-wrap gap-10 justify-center">
             {search?.map((d, i) => (
@@ -441,25 +436,25 @@ const Songs = () => {
                   </div>
 
                   <div className="flex flex-row-reverse">
-                  {existingData?.find((element) => element?.id == d?.id) ? (
-                    <i
-                      title="Unlike"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        likehandle2(d);
-                      }}
-                      className={`text-2xl m-auto flex w-[3vw] sm:w-[9vw] rounded-full justify-center items-center h-[3vw] sm:h-[9vw] duration-300 cursor-pointer text-[#0ff50f] ri-heart-3-fill`}
-                    ></i>
-                  ) : (
-                    <i
-                      title="Like"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        likehandle2(d);
-                      }}
-                      className={`text-2xl m-auto flex w-[3vw] sm:w-[9vw] rounded-full justify-center items-center h-[3vw] sm:h-[9vw] duration-300 cursor-pointer text-white ri-heart-3-fill`}
-                    ></i>
-                  )}
+                    {existingData?.find((element) => element?.id == d?.id) ? (
+                      <i
+                        title="Unlike"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          likehandle2(d);
+                        }}
+                        className={`text-2xl m-auto flex w-[3vw] sm:w-[9vw] rounded-full justify-center items-center h-[3vw] sm:h-[9vw] duration-300 cursor-pointer text-[#0ff50f] ri-heart-3-fill`}
+                      ></i>
+                    ) : (
+                      <i
+                        title="Like"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          likehandle2(d);
+                        }}
+                        className={`text-2xl m-auto flex w-[3vw] sm:w-[9vw] rounded-full justify-center items-center h-[3vw] sm:h-[9vw] duration-300 cursor-pointer text-white ri-heart-3-fill`}
+                      ></i>
+                    )}
                   </div>
                 </motion.div>
               </motion.div>
@@ -476,6 +471,16 @@ const Songs = () => {
             )}
           </div>
         </div>
+        ) : (
+          <div className="absolute w-[27%] sm:w-[60%] left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer">
+            <p className="text-center text-3xl font-bold text-white">
+              Play what you love
+            </p>
+            <p className="text-center text-xl font-semibold text-white">
+              and enjoy your musical<i className="ri-music-2-line"></i> world
+            </p>
+          </div>
+        )}
       </InfiniteScroll>
       <motion.div
         className={

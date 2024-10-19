@@ -89,7 +89,6 @@ const ArtistsDetails = () => {
       updatedData = JSON.parse(existingData);
     }
     let exists = updatedData.some((item) => item.id === i.id);
-
     if (!exists) {
       updatedData.push(i);
       localStorage.setItem("likeData", JSON.stringify(updatedData));
@@ -102,14 +101,10 @@ const ArtistsDetails = () => {
         console.log("No data found in localStorage.");
         return;
       }
-
       let updatedData = JSON.parse(existingData);
-
       const indexToRemove = updatedData.findIndex((item) => item.id === i.id);
-
       if (indexToRemove !== -1) {
         updatedData.splice(indexToRemove, 1);
-
         localStorage.setItem("likeData", JSON.stringify(updatedData));
       }
     }
@@ -152,29 +147,22 @@ const ArtistsDetails = () => {
     if (existingData) {
       updatedData = JSON.parse(existingData);
     }
-
     let exists = updatedData.some((item) => item.id === i.id);
-
     if (!exists) {
       updatedData.push(i);
-
       localStorage.setItem("likeData", JSON.stringify(updatedData));
       setlike2(!like2);
     } else {
       setlike2(!like2);
       let existingData = localStorage.getItem("likeData");
-
       if (!existingData) {
         console.log("No data found in localStorage.");
         return;
       }
-
       let updatedData = JSON.parse(existingData);
       const indexToRemove = updatedData.findIndex((item) => item.id === i.id);
-
       if (indexToRemove !== -1) {
         updatedData.splice(indexToRemove, 1);
-
         localStorage.setItem("likeData", JSON.stringify(updatedData));
       }
     }
@@ -182,7 +170,6 @@ const ArtistsDetails = () => {
 
   const initializeMediaSession = () => {
     const isIOS = /(iPhone|iPod|iPad)/i.test(navigator.userAgent);
-
     if (!isIOS && "mediaSession" in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: songlink[0]?.name || "",
@@ -195,7 +182,6 @@ const ArtistsDetails = () => {
           },
         ],
       });
-
       navigator.mediaSession.setActionHandler("play", function () {
         if (audioRef.current) {
           audioRef.current.play().catch((error) => {
@@ -203,7 +189,6 @@ const ArtistsDetails = () => {
           });
         }
       });
-
       navigator.mediaSession.setActionHandler("pause", function () {
         if (audioRef.current) {
           audioRef.current.pause().catch((error) => {
@@ -211,11 +196,9 @@ const ArtistsDetails = () => {
           });
         }
       });
-
       navigator.mediaSession.setActionHandler("previoustrack", function () {
         pre();
       });
-
       navigator.mediaSession.setActionHandler("nexttrack", function () {
         next();
       });

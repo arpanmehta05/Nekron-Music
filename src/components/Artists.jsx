@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Toaster } from "react-hot-toast";
 import "./dropdown.css";
@@ -96,48 +96,60 @@ const Artists = () => {
             <i className="ri-search-2-line"></i>
           </p>
         </motion.div>
-        <motion.div className="w-full overflow-hidden overflow-y-auto h-[85vh] flex flex-wrap px-5 gap-8 justify-center bg-black py-5 ">
-          {artists
-            ?.filter(
-              (e) =>
-                e?.image[2]?.url !==
-                  "https://www.jiosaavn.com/_i/3.0/artist-default-music.png" &&
-                e?.image[2]?.url !==
-                  "https://www.jiosaavn.com/_i/3.0/artist-default-film.png"
-            )
-            .map((e, i) => (
-              <motion.div
-              key={i}
-              onClick={() =>
-                navigate(`/artists/details/${e.id}`, {
-                  state: {
-                    image: e.image[2]?.url,
-                    name: e.name,
-                    album: e.album,
-                  },
-                })
-              }
-              whileHover={{ scale: 1.05 }}
-              className="w-[20vw] sm:w-[40vw] h-[50vh] sm:h-[25vh] bg-[#1c1c1e] hover:bg-[#333] transition-all duration-300 cursor-pointer flex flex-col relative group"
-            >
-              <div className="w-full h-[80%] rounded-t-md overflow-hidden">
-                <img
-                  className="w-full h-full object-cover transition-transform duration-500"
-                  src={e?.image[2]?.url}
-                  alt={e.name}
-                />
-              </div>
-              <p className="text-white text-lg sm:text-[12px] h-[20%] w-full font-medium mt-7 sm:mt-3 group-hover:text-[#0ff50f] transition-colors duration-300 px-3 sm:px-3">
-                {e.name.length > 20
-                  ? e.name
-                      .slice(0, 20)
-                      .trim()
-                      .replace(/[\s\(\[\{]*$/, "") + "..."
-                  : e.name}
-              </p>
-            </motion.div>
-            ))}
-        </motion.div>
+        {artists.length > 0 ? (
+          <motion.div className="w-full overflow-hidden overflow-y-auto h-[85vh] flex flex-wrap px-5 gap-8 justify-center bg-black py-5 ">
+            {artists
+              ?.filter(
+                (e) =>
+                  e?.image[2]?.url !==
+                    "https://www.jiosaavn.com/_i/3.0/artist-default-music.png" &&
+                  e?.image[2]?.url !==
+                    "https://www.jiosaavn.com/_i/3.0/artist-default-film.png"
+              )
+              .map((e, i) => (
+                <motion.div
+                  key={i}
+                  onClick={() =>
+                    navigate(`/artists/details/${e.id}`, {
+                      state: {
+                        image: e.image[2]?.url,
+                        name: e.name,
+                        album: e.album,
+                      },
+                    })
+                  }
+                  whileHover={{ scale: 1.05 }}
+                  className="w-[20vw] sm:w-[40vw] h-[50vh] sm:h-[25vh] bg-[#1c1c1e] hover:bg-[#333] transition-all duration-300 cursor-pointer flex flex-col relative group"
+                >
+                  <div className="w-full h-[80%] rounded-t-md overflow-hidden">
+                    <img
+                      className="w-full h-full object-cover transition-transform duration-500"
+                      src={e?.image[2]?.url}
+                      alt={e.name}
+                    />
+                  </div>
+                  <p className="text-white text-lg sm:text-[12px] h-[20%] w-full font-medium mt-7 sm:mt-3 group-hover:text-[#0ff50f] transition-colors duration-300 px-3 sm:px-3">
+                    {e.name.length > 20
+                      ? e.name
+                          .slice(0, 20)
+                          .trim()
+                          .replace(/[\s\(\[\{]*$/, "") + "..."
+                      : e.name}
+                  </p>
+                </motion.div>
+              ))}
+          </motion.div>
+        ) : (
+          <div className="absolute w-[27%] sm:w-[60%] left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer">
+            <p className="text-center text-3xl font-bold text-white">
+              Find Your Favorite Artist
+            </p>
+            <p className="text-center text-xl font-semibold text-white">
+              and dive into their musical world{" "}
+              <i className="ri-music-2-line"></i>
+            </p>
+          </div>
+        )}
       </motion.div>
     </motion.div>
   );

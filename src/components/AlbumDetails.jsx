@@ -345,7 +345,7 @@ const AlbumDetails = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 1 }}
-                className="absolute inset-0 z-10 flex items-center justify-center bg-[#1e1e1e] opacity-60 bg-opacity-50"
+                className="absolute inset-0 z-10 flex items-center justify-center bg-[#0ff50f46] bg-opacity-50"
               >
               </motion.div>
             )}
