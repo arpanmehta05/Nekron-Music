@@ -1,11 +1,9 @@
-import axios from "axios";
+import axios from "axios"; //provides simple asynconous api request and deal with HTTP request
 import React, { useEffect, useRef, useState } from "react";
 import {useLocation, useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 import "./dropdown.css";
-import {
-  motion,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import { Toaster } from "react-hot-toast";
 
 const PlaylistDetails = () => {
@@ -88,9 +86,7 @@ const PlaylistDetails = () => {
         }
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
-
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -102,24 +98,18 @@ const PlaylistDetails = () => {
       JSON.parse(localStorage.getItem("likeData")).some(
         (item) => item.id == e?.id
       );
-
     setlike(tf);
   }
 
   function likehandle(i) {
     let existingData = localStorage.getItem("likeData");
-
     let updatedData = [];
-
     if (existingData) {
       updatedData = JSON.parse(existingData);
     }
-
     let exists = updatedData.some((item) => item.id === i.id);
-
     if (!exists) {
       updatedData.push(i);
-
       localStorage.setItem("likeData", JSON.stringify(updatedData));
       setlike(true);
     } else {
@@ -130,14 +120,10 @@ const PlaylistDetails = () => {
         console.log("No data found in localStorage.");
         return;
       }
-
       let updatedData = JSON.parse(existingData);
-
       const indexToRemove = updatedData.findIndex((item) => item.id === i.id);
-
       if (indexToRemove !== -1) {
         updatedData.splice(indexToRemove, 1);
-
         localStorage.setItem("likeData", JSON.stringify(updatedData));
       }
     }
@@ -199,7 +185,6 @@ const PlaylistDetails = () => {
 
   const initializeMediaSession = () => {
     const isIOS = /(iPhone|iPod|iPad)/i.test(navigator.userAgent);
-
     if (!isIOS && "mediaSession" in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: songlink[0]?.name || "",
@@ -212,29 +197,23 @@ const PlaylistDetails = () => {
           },
         ],
       });
-
       navigator.mediaSession.setActionHandler("play", function () {
-        // Handle play action
         if (audioRef.current) {
           audioRef.current.play().catch((error) => {
             console.error("Play error:", error);
           });
         }
       });
-
       navigator.mediaSession.setActionHandler("pause", function () {
-        // Handle pause action
         if (audioRef.current) {
           audioRef.current.pause().catch((error) => {
             console.error("Pause error:", error);
           });
         }
       });
-
       navigator.mediaSession.setActionHandler("previoustrack", function () {
         pre();
       });
-
       navigator.mediaSession.setActionHandler("nexttrack", function () {
         next();
       });
@@ -284,7 +263,6 @@ const PlaylistDetails = () => {
   }, [songlink]);
 
   var title = songlink[0]?.name;
-
   document.title = `${title ? title : "Nekron-Music"}`;
 
   return details.length ? (
@@ -358,11 +336,23 @@ const PlaylistDetails = () => {
               />
               <div className="flex flex-col">
                 <h3
-                  className={`text-base font-bold ${
+                  className={`text-base font-bold sm:hidden ${
                     d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
                   }`}
                 >
                   {d.name}
+                </h3>
+                <h3
+                  className={`text-base font-bold hide-on-laptop ${
+                    d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
+                  }`}
+                >
+                  {d.name.length > 20
+                    ? d.name
+                        .slice(0, 20)
+                        .trim()
+                        .replace(/[\s\(\[\{]*$/, "") + "..."
+                      : d.name}
                 </h3>
                 <p className={`text-base font-semibold hide-on-laptop ${
                   d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-gray-300"
@@ -541,8 +531,7 @@ const PlaylistDetails = () => {
                   }}
                   onChange={(e) => {
                     if (audioRef.current) {
-                      const newTime = e.target.value;
-                      audioRef.current.currentTime = newTime;
+                      audioRef.current.currentTime = e.target.value;
                     }
                   }}
                   style={{

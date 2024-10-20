@@ -351,18 +351,25 @@ const ArtistsDetails = () => {
                   alt=""
                 />
                 <div className="flex flex-col">
-                  <h3
-                    className={`text-base font-bold ${
-                      d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
-                    }`}
-                  >
-                    {d.name.length > 20
-                      ? d.name
-                          .slice(0, 20)
-                          .trim()
-                          .replace(/[\s\(\[\{]*$/, "") + "..."
+                <h3
+                  className={`text-base font-bold sm:hidden ${
+                    d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
+                  }`}
+                >
+                  {d.name}
+                </h3>
+                <h3
+                  className={`text-base font-bold hide-on-laptop ${
+                    d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
+                  }`}
+                >
+                  {d.name.length > 20
+                    ? d.name
+                        .slice(0, 20)
+                        .trim()
+                        .replace(/[\s\(\[\{]*$/, "") + "..."
                       : d.name}
-                  </h3>
+                </h3>
                   <p
                     className={`text-base font-semibold hide-on-laptop ${
                       d.id === songlink[0]?.id
@@ -550,8 +557,7 @@ const ArtistsDetails = () => {
                   }}
                   onChange={(e) => {
                     if (audioRef.current) {
-                      const newTime = e.target.value;
-                      audioRef.current.currentTime = newTime;
+                      audioRef.current.currentTime = e.target.value;
                     }
                   }}
                   style={{

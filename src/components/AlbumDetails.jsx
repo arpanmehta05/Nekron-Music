@@ -339,17 +339,6 @@ const AlbumDetails = () => {
               setTimeout(() => setShowAnimation(null), 2000);
             }}
           >
-            {showAnimation === i && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1 }}
-                className="absolute inset-0 z-10 flex items-center justify-center bg-[#0ff50f46] bg-opacity-50"
-              >
-              </motion.div>
-            )}
-
             <div className="flex items-center justify-center w-[5%]">
               <p
                 className={`text-base font-semibold ${
@@ -368,12 +357,24 @@ const AlbumDetails = () => {
                 alt=""
               />
               <div className="flex flex-col">
-                <h3
-                  className={`text-base font-bold ${
+              <h3
+                  className={`text-base font-bold sm:hidden ${
                     d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
                   }`}
                 >
                   {d.name}
+                </h3>
+                <h3
+                  className={`text-base font-bold hide-on-laptop ${
+                    d.id === songlink[0]?.id ? "text-[#0ff50f]" : "text-white"
+                  }`}
+                >
+                  {d.name.length > 20
+                    ? d.name
+                        .slice(0, 20)
+                        .trim()
+                        .replace(/[\s\(\[\{]*$/, "") + "..."
+                      : d.name}
                 </h3>
                 <p
                   className={`text-base font-semibold hide-on-laptop ${
@@ -554,8 +555,7 @@ const AlbumDetails = () => {
                   }}
                   onChange={(e) => {
                     if (audioRef.current) {
-                      const newTime = e.target.value;
-                      audioRef.current.currentTime = newTime;
+                      audioRef.current.currentTime = e.target.value;
                     }
                   }}
                   style={{

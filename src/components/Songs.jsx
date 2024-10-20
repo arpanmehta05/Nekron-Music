@@ -418,9 +418,9 @@ const Songs = () => {
                         d.id === songlink[0]?.id ? "text-[#0ff50f]" : ""
                       }`}
                     >
-                      {d.name.length > 20
+                      {d.name.length > 25
                         ? d.name
-                            .slice(0, 20)
+                            .slice(0, 25)
                             .trim()
                             .replace(/[\s\(\[\{]*$/, "") + "..."
                         : d.name}
@@ -586,8 +586,7 @@ const Songs = () => {
                   }}
                   onChange={(e) => {
                     if (audioRef.current) {
-                      const newTime = e.target.value;
-                      audioRef.current.currentTime = newTime;
+                      audioRef.current.currentTime = e.target.value;
                     }
                   }}
                   style={{
