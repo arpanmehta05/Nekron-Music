@@ -6,9 +6,7 @@ import Loading from "./Loading";
 import "react-dropdown/style.css";
 import "./dropdown.css";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
-import {
-  motion,
-} from "framer-motion";
+import { motion } from "framer-motion";
 
 const Home = () => {
   let navigate = useNavigate();
@@ -362,10 +360,18 @@ const Home = () => {
             Likes
           </Link>
         </motion.div>
+        {/* <motion.div className="sm:flex sm:pt-3 text-white mx-2 sm:mx-0 flex gap-3">
+        <Link
+            className=" text-xl sm:text-sm ml-3 sm:ml-0 sm:font-bold  p-1 rounded-md hover:text-[#0fea0f]  text-white  font-semibold"
+            to={"/login"}
+          >
+            Login
+          </Link>
+        </motion.div> */}
       </motion.div>
 
       <div className="w-full bg-black pt-[13vh] text-white flex flex-col gap-5 overflow-x-auto overflow-hidden no-scrollbar">
-      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
           {options.map((langOption, index) => (
             <button
               key={index}
@@ -379,7 +385,7 @@ const Home = () => {
           ))}
         </div>
       </div>
-      
+
       <div className="w-full  bg-black  min-h-[63vh] pb-[30vh]  text-white p-5 flex flex-col gap-5 overflow-auto ">
         <div className="trending songs flex flex-col gap-3 w-full ">
           <h3 className="text-3xl h-[5vh] font-semibold text-[#0ff50f] capitalize ">
@@ -391,7 +397,7 @@ const Home = () => {
                 onClick={() => audioseter(i)}
                 key={i}
                 whileHover={{
-                  scale: 1.1
+                  scale: 1.1,
                 }}
                 className="flex-shrink-0 h-[50%] w-[20%] sm:w-[30%] rounded-lg cursor-pointer flex flex-col transition-all duration-300 shadow-md group relative"
               >
@@ -424,7 +430,6 @@ const Home = () => {
                           .replace(/[\s\(\[\{]*$/, "") + "..."
                       : t.album.name}
                   </p>
-                  
                 </motion.div>
 
                 {songlink.length > 0 && (
@@ -459,7 +464,7 @@ const Home = () => {
                 }
                 key={i}
                 whileHover={{
-                  scale: 1.1
+                  scale: 1.1,
                 }}
                 className="flex-shrink-0 w-[15%] sm:w-[40%] h-[50%] rounded-lg cursor-pointer flex flex-col items-center justify-center transition-all duration-300 shadow-md group"
               >
@@ -501,7 +506,7 @@ const Home = () => {
                 }
                 key={i}
                 whileHover={{
-                  scale: 1.1
+                  scale: 1.1,
                 }}
                 className="flex-shrink-0 h-[50%] w-[15%] sm:w-[40%] rounded-lg cursor-pointer flex flex-col items-center justify-center transition-all duration-300 shadow-md group"
               >
@@ -570,86 +575,165 @@ const Home = () => {
       <motion.div
         className={
           songlink.length > 0
-            ? `duration-700 fixed z-[99] bottom-0 flex items-center w-full max-h-[30vh] py-1 px-10 bg-black`
+            ? `duration-700 fixed z-[99] bottom-0 flex items-center w-full max-h-[35vh] py-1 px-10 bg-black`
             : "block"
         }
       >
         {songlink?.map((e, i) => (
-          <motion.div
-            key={i}
-            className="flex w-full items-center justify-between gap-6"
-          >
-            <motion.div className="flex items-center gap-4 rounded-md h-[7vw] sm:h-[20vw]">
-              <motion.img
-                className="rounded-md h-[5vw] sm:h-[15vw]"
-                src={e?.image[2]?.url}
-                alt={e?.name}
-              />
-              <div
-                className="flex flex-col"
-                style={{
-                  width: "200px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <h3 className="text-[#0ff50f] text-base font-semibold">
-                  {e?.name.length > 20
-                    ? e.name
-                        .slice(0, 20)
-                        .trim()
-                        .replace(/[\s\(\[\{]*$/, "") + "..."
-                    : e.name}
-                </h3>
-              </div>
-            </motion.div>
-            <div className="flex items-center gap-2 sm:gap-1 w-[50%] flex-col">
-              <div className="flex justify-between">
-                <button
-                  onClick={pre}
-                  className="text-3xl text-zinc-300 hover:text-zinc-50 cursor-pointer"
-                >
-                  <i className="ri-skip-back-mini-fill"></i>
-                </button>
-
-                <audio
-                  ref={audioRef}
-                  onPause={() => setaudiocheck(false)}
-                  onPlay={() => setaudiocheck(true)}
-                  className="custom-audio w-full sm:w-[80%]"
-                  autoPlay
-                  onEnded={next}
-                  onTimeUpdate={() =>
-                    setCurrentTime(audioRef.current.currentTime)
-                  }
-                  onLoadedMetadata={() =>
-                    setTotalTime(audioRef.current.duration)
-                  }
-                  src={e?.downloadUrl[4]?.url}
-                ></audio>
-
-                <button
-                  onClick={() => {
-                    if (audioRef.current.paused) {
-                      audioRef.current.play();
-                    } else {
-                      audioRef.current.pause();
-                    }
+          <div className="flex flex-col w-full items-center justify-between gap-3 ">
+            <motion.div
+              key={i}
+              className="flex w-full items-center justify-between gap-6"
+            >
+              <motion.div className="flex items-center gap-4 rounded-md h-[7vw] sm:h-[20vw]">
+                <motion.img
+                  className="rounded-md h-[5vw] sm:h-[15vw]"
+                  src={e?.image[2]?.url}
+                  alt={e?.name}
+                />
+                <div
+                  className="flex flex-col"
+                  style={{
+                    width: "200px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
                   }}
-                  className={`text-white text-5xl ${
-                    audiocheck ? "ri-pause-circle-fill" : "ri-play-circle-fill"
-                  }`}
-                ></button>
-
-                <button
-                  onClick={next}
-                  className="text-3xl text-zinc-300 hover:text-zinc-50 cursor-pointer"
                 >
-                  <i className="ri-skip-right-fill"></i>
-                </button>
+                  <h3 className="text-[#0ff50f] text-base font-semibold">
+                    {e?.name.length > 20
+                      ? e.name
+                          .slice(0, 20)
+                          .trim()
+                          .replace(/[\s\(\[\{]*$/, "") + "..."
+                      : e.name}
+                  </h3>
+                </div>
+              </motion.div>
+              <div className="flex items-center gap-2 sm:gap-1 w-[50%] flex-col">
+                <div className="flex justify-between">
+                  <button
+                    onClick={pre}
+                    className="text-3xl text-zinc-300 hover:text-zinc-50 cursor-pointer"
+                  >
+                    <i className="ri-skip-back-mini-fill"></i>
+                  </button>
+
+                  <audio
+                    ref={audioRef}
+                    onPause={() => setaudiocheck(false)}
+                    onPlay={() => setaudiocheck(true)}
+                    className="custom-audio w-full sm:w-[80%]"
+                    autoPlay
+                    onEnded={next}
+                    onTimeUpdate={() =>
+                      setCurrentTime(audioRef.current.currentTime)
+                    }
+                    onLoadedMetadata={() =>
+                      setTotalTime(audioRef.current.duration)
+                    }
+                    src={e?.downloadUrl[4]?.url}
+                  ></audio>
+
+                  <button
+                    onClick={() => {
+                      if (audioRef.current.paused) {
+                        audioRef.current.play();
+                      } else {
+                        audioRef.current.pause();
+                      }
+                    }}
+                    className={`text-white text-5xl ${
+                      audiocheck
+                        ? "ri-pause-circle-fill"
+                        : "ri-play-circle-fill"
+                    }`}
+                  ></button>
+
+                  <button
+                    onClick={next}
+                    className="text-3xl text-zinc-300 hover:text-zinc-50 cursor-pointer"
+                  >
+                    <i className="ri-skip-right-fill"></i>
+                  </button>
+                </div>
+                <div className="flex justify-between items-center w-full sm:w-[80%] sm:hidden">
+                  <span className="text-sm text-white">
+                    {formatTime(audioRef.current?.currentTime || 0)}
+                  </span>
+
+                  <input
+                    type="range"
+                    className="time-slider cursor-pointer w-full mx-2"
+                    min="0"
+                    max={audioRef.current?.duration || 100}
+                    value={audioRef.current?.currentTime || 0}
+                    onInput={(e) => {
+                      const newTime = e.target.value;
+                      if (audioRef.current) {
+                        e.target.style.background = `linear-gradient(
+            to right,
+            #0ff50f ${(newTime / audioRef.current.duration) * 100}%,
+            #fff ${(newTime / audioRef.current.duration) * 100}%)`;
+                      }
+                    }}
+                    onChange={(e) => {
+                      if (audioRef.current) {
+                        const newTime = e.target.value;
+                        audioRef.current.currentTime = newTime;
+                      }
+                    }}
+                    style={{
+                      background: `linear-gradient(
+          to right,
+          #0ff50f ${
+            (audioRef.current?.currentTime / audioRef.current?.duration) * 100
+          }%,
+          #fff 0%)`,
+                    }}
+                  />
+
+                  <span className="text-sm text-white">
+                    {formatTime(audioRef.current?.duration || 0)}
+                  </span>
+                </div>
               </div>
-              <div className="flex justify-between items-center w-full sm:w-[80%] sm:hidden">
+
+              <motion.div className="flex items-center gap-4 sm:gap-2 justify-end sm:hidden">
+                <i
+                  onClick={() => likehandle(e)}
+                  className={`text-2xl cursor-pointer ${
+                    like ? "text-[#0ff50f]" : "text-white"
+                  } ri-heart-3-fill`}
+                ></i>
+
+                <div className="flex items-center gap-2">
+                  <i
+                    onClick={() => {
+                      if (audioRef.current) {
+                        audioRef.current.muted = !audioRef.current.muted;
+                        setForceRender((prev) => !prev);
+                      }
+                    }}
+                    className={`text-[#0ff50f] text-xl cursor-pointer ${
+                      audioRef.current?.muted
+                        ? "ri-volume-mute-fill"
+                        : "ri-volume-up-fill"
+                    }`}
+                  ></i>
+                  <input
+                    type="range"
+                    className="volume-slider"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    onChange={handleVolumeChange}
+                  />
+                </div>
+              </motion.div>
+            </motion.div>
+            <div className="hide-on-laptop w-full sm:flex sm:justify-center">
+              <div className="flex justify-between items-center w-full sm:w-[80%]">
                 <span className="text-sm text-white">
                   {formatTime(audioRef.current?.currentTime || 0)}
                 </span>
@@ -690,40 +774,7 @@ const Home = () => {
                 </span>
               </div>
             </div>
-
-            <motion.div className="flex items-center gap-4 sm:gap-2 justify-end sm:hidden">
-              <i
-                onClick={() => likehandle(e)}
-                className={`text-2xl cursor-pointer ${
-                  like ? "text-[#0ff50f]" : "text-white"
-                } ri-heart-3-fill`}
-              ></i>
-
-              <div className="flex items-center gap-2">
-                <i
-                  onClick={() => {
-                    if (audioRef.current) {
-                      audioRef.current.muted = !audioRef.current.muted;
-                      setForceRender((prev) => !prev);
-                    }
-                  }}
-                  className={`text-[#0ff50f] text-xl cursor-pointer ${
-                    audioRef.current?.muted
-                      ? "ri-volume-mute-fill"
-                      : "ri-volume-up-fill"
-                  }`}
-                ></i>
-                <input
-                  type="range"
-                  className="volume-slider"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  onChange={handleVolumeChange}
-                />
-              </div>
-            </motion.div>
-          </motion.div>
+          </div>
         ))}
       </motion.div>
     </div>

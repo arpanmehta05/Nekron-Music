@@ -415,6 +415,7 @@ function Likes() {
           }
         >
           {songlink?.map((e, i) => (
+          <div className="flex flex-col w-full items-center justify-between gap-3 ">
             <motion.div
               key={i}
               className="flex w-full items-center justify-between gap-6"
@@ -444,7 +445,6 @@ function Likes() {
                   </h3>
                 </div>
               </motion.div>
-
               <div className="flex items-center gap-2 sm:gap-1 w-[50%] flex-col">
                 <div className="flex justify-between">
                   <button
@@ -492,11 +492,11 @@ function Likes() {
                     <i className="ri-skip-right-fill"></i>
                   </button>
                 </div>
-
                 <div className="flex justify-between items-center w-full sm:w-[80%] sm:hidden">
                   <span className="text-sm text-white">
                     {formatTime(audioRef.current?.currentTime || 0)}
                   </span>
+
                   <input
                     type="range"
                     className="time-slider cursor-pointer w-full mx-2"
@@ -514,7 +514,8 @@ function Likes() {
                     }}
                     onChange={(e) => {
                       if (audioRef.current) {
-                        audioRef.current.currentTime = e.target.value;
+                        const newTime = e.target.value;
+                        audioRef.current.currentTime = newTime;
                       }
                     }}
                     style={{
@@ -526,6 +527,7 @@ function Likes() {
           #fff 0%)`,
                     }}
                   />
+
                   <span className="text-sm text-white">
                     {formatTime(audioRef.current?.duration || 0)}
                   </span>
@@ -534,8 +536,10 @@ function Likes() {
 
               <motion.div className="flex items-center gap-4 sm:gap-2 justify-end sm:hidden">
                 <i
-                  onClick={() => removehandle(e.id, i)}
-                  className={`text-2xl cursor-pointer text-[#0ff50f] ri-heart-3-fill`}
+                  onClick={() => likehandle(e)}
+                  className={`text-2xl cursor-pointer ${
+                    like ? "text-[#0ff50f]" : "text-white"
+                  } ri-heart-3-fill`}
                 ></i>
 
                 <div className="flex items-center gap-2">
@@ -563,7 +567,50 @@ function Likes() {
                 </div>
               </motion.div>
             </motion.div>
-          ))}
+            <div className="hide-on-laptop w-full sm:flex sm:justify-center">
+              <div className="flex justify-between items-center w-full sm:w-[80%]">
+                <span className="text-sm text-white">
+                  {formatTime(audioRef.current?.currentTime || 0)}
+                </span>
+
+                <input
+                  type="range"
+                  className="time-slider cursor-pointer w-full mx-2"
+                  min="0"
+                  max={audioRef.current?.duration || 100}
+                  value={audioRef.current?.currentTime || 0}
+                  onInput={(e) => {
+                    const newTime = e.target.value;
+                    if (audioRef.current) {
+                      e.target.style.background = `linear-gradient(
+            to right,
+            #0ff50f ${(newTime / audioRef.current.duration) * 100}%,
+            #fff ${(newTime / audioRef.current.duration) * 100}%)`;
+                    }
+                  }}
+                  onChange={(e) => {
+                    if (audioRef.current) {
+                      const newTime = e.target.value;
+                      audioRef.current.currentTime = newTime;
+                    }
+                  }}
+                  style={{
+                    background: `linear-gradient(
+          to right,
+          #0ff50f ${
+            (audioRef.current?.currentTime / audioRef.current?.duration) * 100
+          }%,
+          #fff 0%)`,
+                  }}
+                />
+
+                <span className="text-sm text-white">
+                  {formatTime(audioRef.current?.duration || 0)}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
         </motion.div>
       ) : (
         <h1>NO DATA</h1>

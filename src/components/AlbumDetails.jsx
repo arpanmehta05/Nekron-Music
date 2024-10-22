@@ -408,6 +408,7 @@ const AlbumDetails = () => {
               </p>
             </div>
 
+            
             <div className="flex items-center justify-center gap-4">
               {d.id === songlink[0]?.id ? (
                 <i
@@ -427,8 +428,6 @@ const AlbumDetails = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     audioseter(i);
-                    setShowAnimation(i);
-                    setTimeout(() => setShowAnimation(null), 2000);
                   }}
                 ></i>
               )}
@@ -437,7 +436,7 @@ const AlbumDetails = () => {
                 title="Remove Song"
                 onClick={(e) => {
                   e.stopPropagation();
-                  removehandle(d.id, i);
+                  likehandle2(d);
                 }}
                 className={`text-2xl ${
                   existingData?.find((element) => element?.id === d?.id)
@@ -458,82 +457,160 @@ const AlbumDetails = () => {
         }
       >
         {songlink?.map((e, i) => (
-          <motion.div
-            key={i}
-            className="flex w-full items-center justify-between gap-6"
-          >
-            <motion.div className="flex items-center gap-4 rounded-md h-[7vw] sm:h-[20vw]">
-              <motion.img
-                className="rounded-md h-[5vw] sm:h-[15vw]"
-                src={e?.image[2]?.url}
-                alt={e?.name}
-              />
-              <div
-                className="flex flex-col"
-                style={{
-                  width: "200px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <h3 className="text-[#0ff50f] text-base font-semibold">
-                  {e?.name.length > 20
-                    ? e.name
-                        .slice(0, 20)
-                        .trim()
-                        .replace(/[\s\(\[\{]*$/, "") + "..."
-                    : e.name}
-                </h3>
-              </div>
-            </motion.div>
-            <div className="flex items-center gap-2 sm:gap-1 w-[50%] flex-col">
-              <div className="flex justify-between">
-                <button
-                  onClick={pre}
-                  className="text-3xl text-zinc-300 hover:text-zinc-50 cursor-pointer"
-                >
-                  <i className="ri-skip-back-mini-fill"></i>
-                </button>
-
-                <audio
-                  ref={audioRef}
-                  onPause={() => setaudiocheck(false)}
-                  onPlay={() => setaudiocheck(true)}
-                  className="custom-audio w-full sm:w-[80%]"
-                  autoPlay
-                  onEnded={next}
-                  onTimeUpdate={() =>
-                    setCurrentTime(audioRef.current.currentTime)
-                  }
-                  onLoadedMetadata={() =>
-                    setTotalTime(audioRef.current.duration)
-                  }
-                  src={e?.downloadUrl[4]?.url}
-                ></audio>
-
-                <button
-                  onClick={() => {
-                    if (audioRef.current.paused) {
-                      audioRef.current.play();
-                    } else {
-                      audioRef.current.pause();
-                    }
+          <div className="flex flex-col w-full items-center justify-between gap-3 ">
+            <motion.div
+              key={i}
+              className="flex w-full items-center justify-between gap-6"
+            >
+              <motion.div className="flex items-center gap-4 rounded-md h-[7vw] sm:h-[20vw]">
+                <motion.img
+                  className="rounded-md h-[5vw] sm:h-[15vw]"
+                  src={e?.image[2]?.url}
+                  alt={e?.name}
+                />
+                <div
+                  className="flex flex-col"
+                  style={{
+                    width: "200px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
                   }}
-                  className={`text-white text-5xl ${
-                    audiocheck ? "ri-pause-circle-fill" : "ri-play-circle-fill"
-                  }`}
-                ></button>
-
-                <button
-                  onClick={next}
-                  className="text-3xl text-zinc-300 hover:text-zinc-50 cursor-pointer"
                 >
-                  <i className="ri-skip-right-fill"></i>
-                </button>
+                  <h3 className="text-[#0ff50f] text-base font-semibold">
+                    {e?.name.length > 20
+                      ? e.name
+                          .slice(0, 20)
+                          .trim()
+                          .replace(/[\s\(\[\{]*$/, "") + "..."
+                      : e.name}
+                  </h3>
+                </div>
+              </motion.div>
+              <div className="flex items-center gap-2 sm:gap-1 w-[50%] flex-col">
+                <div className="flex justify-between">
+                  <button
+                    onClick={pre}
+                    className="text-3xl text-zinc-300 hover:text-zinc-50 cursor-pointer"
+                  >
+                    <i className="ri-skip-back-mini-fill"></i>
+                  </button>
+
+                  <audio
+                    ref={audioRef}
+                    onPause={() => setaudiocheck(false)}
+                    onPlay={() => setaudiocheck(true)}
+                    className="custom-audio w-full sm:w-[80%]"
+                    autoPlay
+                    onEnded={next}
+                    onTimeUpdate={() =>
+                      setCurrentTime(audioRef.current.currentTime)
+                    }
+                    onLoadedMetadata={() =>
+                      setTotalTime(audioRef.current.duration)
+                    }
+                    src={e?.downloadUrl[4]?.url}
+                  ></audio>
+
+                  <button
+                    onClick={() => {
+                      if (audioRef.current.paused) {
+                        audioRef.current.play();
+                      } else {
+                        audioRef.current.pause();
+                      }
+                    }}
+                    className={`text-white text-5xl ${
+                      audiocheck
+                        ? "ri-pause-circle-fill"
+                        : "ri-play-circle-fill"
+                    }`}
+                  ></button>
+
+                  <button
+                    onClick={next}
+                    className="text-3xl text-zinc-300 hover:text-zinc-50 cursor-pointer"
+                  >
+                    <i className="ri-skip-right-fill"></i>
+                  </button>
+                </div>
+                <div className="flex justify-between items-center w-full sm:w-[80%] sm:hidden">
+                  <span className="text-sm text-white">
+                    {formatTime(audioRef.current?.currentTime || 0)}
+                  </span>
+
+                  <input
+                    type="range"
+                    className="time-slider cursor-pointer w-full mx-2"
+                    min="0"
+                    max={audioRef.current?.duration || 100}
+                    value={audioRef.current?.currentTime || 0}
+                    onInput={(e) => {
+                      const newTime = e.target.value;
+                      if (audioRef.current) {
+                        e.target.style.background = `linear-gradient(
+            to right,
+            #0ff50f ${(newTime / audioRef.current.duration) * 100}%,
+            #fff ${(newTime / audioRef.current.duration) * 100}%)`;
+                      }
+                    }}
+                    onChange={(e) => {
+                      if (audioRef.current) {
+                        const newTime = e.target.value;
+                        audioRef.current.currentTime = newTime;
+                      }
+                    }}
+                    style={{
+                      background: `linear-gradient(
+          to right,
+          #0ff50f ${
+            (audioRef.current?.currentTime / audioRef.current?.duration) * 100
+          }%,
+          #fff 0%)`,
+                    }}
+                  />
+
+                  <span className="text-sm text-white">
+                    {formatTime(audioRef.current?.duration || 0)}
+                  </span>
+                </div>
               </div>
 
-              <div className="flex justify-between items-center w-full sm:w-[80%] sm:hidden">
+              <motion.div className="flex items-center gap-4 sm:gap-2 justify-end sm:hidden">
+                <i
+                  onClick={() => likehandle(e)}
+                  className={`text-2xl cursor-pointer ${
+                    like ? "text-[#0ff50f]" : "text-white"
+                  } ri-heart-3-fill`}
+                ></i>
+
+                <div className="flex items-center gap-2">
+                  <i
+                    onClick={() => {
+                      if (audioRef.current) {
+                        audioRef.current.muted = !audioRef.current.muted;
+                        setForceRender((prev) => !prev);
+                      }
+                    }}
+                    className={`text-[#0ff50f] text-xl cursor-pointer ${
+                      audioRef.current?.muted
+                        ? "ri-volume-mute-fill"
+                        : "ri-volume-up-fill"
+                    }`}
+                  ></i>
+                  <input
+                    type="range"
+                    className="volume-slider"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    onChange={handleVolumeChange}
+                  />
+                </div>
+              </motion.div>
+            </motion.div>
+            <div className="hide-on-laptop w-full sm:flex sm:justify-center">
+              <div className="flex justify-between items-center w-full sm:w-[80%]">
                 <span className="text-sm text-white">
                   {formatTime(audioRef.current?.currentTime || 0)}
                 </span>
@@ -555,7 +632,8 @@ const AlbumDetails = () => {
                   }}
                   onChange={(e) => {
                     if (audioRef.current) {
-                      audioRef.current.currentTime = e.target.value;
+                      const newTime = e.target.value;
+                      audioRef.current.currentTime = newTime;
                     }
                   }}
                   style={{
@@ -573,40 +651,7 @@ const AlbumDetails = () => {
                 </span>
               </div>
             </div>
-
-            <motion.div className="flex items-center gap-4 sm:gap-2 justify-end sm:hidden">
-              <i
-                onClick={() => likehandle(e)}
-                className={`text-2xl cursor-pointer ${
-                  like ? "text-[#0ff50f]" : "text-white"
-                } ri-heart-3-fill`}
-              ></i>
-
-              <div className="flex items-center gap-2">
-                <i
-                  onClick={() => {
-                    if (audioRef.current) {
-                      audioRef.current.muted = !audioRef.current.muted;
-                      setForceRender((prev) => !prev);
-                    }
-                  }}
-                  className={`text-[#0ff50f] text-xl cursor-pointer ${
-                    audioRef.current?.muted
-                      ? "ri-volume-mute-fill"
-                      : "ri-volume-up-fill"
-                  }`}
-                ></i>
-                <input
-                  type="range"
-                  className="volume-slider"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  onChange={handleVolumeChange}
-                />
-              </div>
-            </motion.div>
-          </motion.div>
+          </div>
         ))}
       </motion.div>
     </motion.div>

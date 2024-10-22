@@ -150,3 +150,9 @@
     display: none;
   }
 }
+
+@media (min-width: 640px) and (max-width: 1024px) {
+  .hide-on-laptop {
+    display: none;
+  }
+}
