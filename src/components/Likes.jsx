@@ -50,19 +50,14 @@ function Likes() {
   function removehandle(i, ind) {
     setlike(false);
     let existingData = localStorage.getItem("likeData");
-
     if (!existingData) {
       console.log("No data found in localStorage.");
       return;
     }
-
     let updatedData = JSON.parse(existingData);
-
     const indexToRemove = updatedData.findIndex((item) => item.id === i);
-
     if (indexToRemove !== -1) {
       updatedData.splice(indexToRemove, 1);
-
       localStorage.setItem("likeData", JSON.stringify(updatedData));
       setrerender(!rerender);
       if (songlink[0].id != i) {
@@ -82,7 +77,6 @@ function Likes() {
 
   const initializeMediaSession = () => {
     const isIOS = /(iPhone|iPod|iPad)/i.test(navigator.userAgent);
-
     if (!isIOS && "mediaSession" in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: songlink[0]?.name || "",
@@ -95,7 +89,6 @@ function Likes() {
           },
         ],
       });
-
       navigator.mediaSession.setActionHandler("play", function () {
         if (audioRef.current) {
           audioRef.current.play().catch((error) => {
@@ -103,7 +96,6 @@ function Likes() {
           });
         }
       });
-
       navigator.mediaSession.setActionHandler("pause", function () {
         if (audioRef.current) {
           audioRef.current.pause().catch((error) => {
@@ -111,11 +103,9 @@ function Likes() {
           });
         }
       });
-
       navigator.mediaSession.setActionHandler("previoustrack", function () {
         pre();
       });
-
       navigator.mediaSession.setActionHandler("nexttrack", function () {
         next();
       });
@@ -127,8 +117,6 @@ function Likes() {
   const handleVolumeChange = (e) => {
     const value = e.target.value;
     audioRef.current.volume = value;
-
-    // Set the dynamic gradient for the volume bar
     e.target.style.background = `linear-gradient(to right, #0ff50f 0%, #0ff50f ${
       value * 100
     }%, #ccc ${value * 100}%, #ccc 100%)`;
@@ -150,9 +138,7 @@ function Likes() {
         }
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
-
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -203,12 +189,9 @@ function Likes() {
 
   useEffect(() => {
     const allData = localStorage.getItem("likeData");
-
     if (allData) {
       const parsedData = JSON.parse(allData);
-
       setdetails(parsedData.reverse());
-
       const extractedSongs = parsedData.map((song) => ({
         title: song.name,
         url: song.downloadUrl[4].url,
@@ -231,9 +214,10 @@ function Likes() {
       initializeMediaSession();
     }
   }, [songlink]);
+
   var title = songlink[0]?.name;
   document.title = `${title ? title : "Nekron-Music"}`;
-
+  
   return (
     <div className="w-full h-screen bg-[#131212]">
       <Toaster position="top-center" reverseOrder={false} />

@@ -7,6 +7,9 @@ import "react-dropdown/style.css";
 import "./dropdown.css";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { auth , db } from "../firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+// import { collection, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
 const Home = () => {
   let navigate = useNavigate();
@@ -22,6 +25,8 @@ const Home = () => {
   const [audiocheck, setaudiocheck] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
+  const [user, setUser] = useState(null);
+  const [forceRender, setForceRender] = useState(false);
 
   const options = [
     "hindi",
@@ -60,9 +65,6 @@ const Home = () => {
           language === "english" ? page : page2
         }&limit=20`
       );
-
-      // console.log(data);
-
       const newData = data.data.results.filter(
         (newItem) => !details.some((prevItem) => prevItem.id === newItem.id)
       );
@@ -72,7 +74,6 @@ const Home = () => {
       console.log("error", error);
     }
   };
-  const [forceRender, setForceRender] = useState(false);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -101,6 +102,24 @@ const Home = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -151,15 +170,11 @@ const Home = () => {
 
   function likehandle(i) {
     let existingData = localStorage.getItem("likeData");
-
     let updatedData = [];
-
     if (existingData) {
       updatedData = JSON.parse(existingData);
     }
-
     let exists = updatedData.some((item) => item.id === i.id);
-
     if (!exists) {
       updatedData.push(i);
       localStorage.setItem("likeData", JSON.stringify(updatedData));
@@ -167,26 +182,21 @@ const Home = () => {
     } else {
       setlike(false);
       let existingData = localStorage.getItem("likeData");
-
       if (!existingData) {
         console.log("No data found in localStorage.");
         return;
       }
-
       let updatedData = JSON.parse(existingData);
-
       const indexToRemove = updatedData.findIndex((item) => item.id === i.id);
-
       if (indexToRemove !== -1) {
         updatedData.splice(indexToRemove, 1);
-
         localStorage.setItem("likeData", JSON.stringify(updatedData));
       }
     }
   }
+
   const initializeMediaSession = () => {
     const isIOS = /(iPhone|iPod|iPad)/i.test(navigator.userAgent);
-
     if (!isIOS && "mediaSession" in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: songlink[0]?.name || "",
@@ -201,7 +211,7 @@ const Home = () => {
       });
 
       navigator.mediaSession.setActionHandler("play", function () {
-        // Handle play action
+      
         if (audioRef.current) {
           audioRef.current.play().catch((error) => {
             console.error("Play error:", error);
@@ -210,7 +220,7 @@ const Home = () => {
       });
 
       navigator.mediaSession.setActionHandler("pause", function () {
-        // Handle pause action
+       
         if (audioRef.current) {
           audioRef.current.pause().catch((error) => {
             console.error("Pause error:", error);
@@ -252,8 +262,6 @@ const Home = () => {
   const handleVolumeChange = (e) => {
     const value = e.target.value;
     audioRef.current.volume = value;
-
-    // Set the dynamic gradient for the volume bar
     e.target.style.background = `linear-gradient(to right, #0ff50f 0%, #0ff50f ${
       value * 100
     }%, #ccc ${value * 100}%, #ccc 100%)`;
@@ -318,7 +326,6 @@ const Home = () => {
   }, [songlink]);
 
   var title = songlink[0]?.name;
-
   document.title = `${title ? title : "Nekron Music"}`;
 
   return details.length > 0 ? (
@@ -360,15 +367,27 @@ const Home = () => {
             Likes
           </Link>
         </motion.div>
-        {/* <motion.div className="sm:flex sm:pt-3 text-white mx-2 sm:mx-0 flex gap-3">
-        <Link
-            className=" text-xl sm:text-sm ml-3 sm:ml-0 sm:font-bold  p-1 rounded-md hover:text-[#0fea0f]  text-white  font-semibold"
-            to={"/login"}
-          >
-            Login
-          </Link>
-        </motion.div> */}
+        <motion.div className="sm:flex sm:pt-3 text-white mx-2 sm:mx-0 flex gap-3">
+        {user ? (
+            <>
+              <span className="text-xl sm:text-sm ml-3 sm:ml-0 text-white font-semibold sm:hidden">
+                {user.displayName || "User"}
+              </span>
+              <span className="text-2xl bg-slate-800 p-4 rounded-md sm:text-sm ml-3 sm:ml-0 text-white font-semibold hide-on-laptop">
+                {user.displayName.charAt(0).toUpperCase() || "User"}
+              </span>
+              <button onClick={handleLogout} className="text-xl sm:text-sm ml-3 sm:ml-0 text-[#0fea0f] hover:underline">
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="text-xl sm:text-sm ml-3 sm:ml-0 text-white font-semibold hover:text-[#0fea0f]">
+              Login
+            </Link>
+          )}
+        </motion.div>
       </motion.div>
+
 
       <div className="w-full bg-black pt-[13vh] text-white flex flex-col gap-5 overflow-x-auto overflow-hidden no-scrollbar">
         <div className="flex items-center gap-4">
@@ -679,8 +698,7 @@ const Home = () => {
                     }}
                     onChange={(e) => {
                       if (audioRef.current) {
-                        const newTime = e.target.value;
-                        audioRef.current.currentTime = newTime;
+                        audioRef.current.currentTime = e.target.value;
                       }
                     }}
                     style={{

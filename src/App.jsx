@@ -10,6 +10,7 @@ import Album from "./components/Album";
 import Songs from "./components/Songs";
 import Likes from "./components/Likes";
 import Login from "./components/Login";
+import Signup from "./components/Signup";
 
 
 
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/artists/details/:id" element={<ArtistsDetails />} />
         <Route path="/likes" element={<Likes/>} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<Signup/>} />
       </Routes>
     </div>
   );
